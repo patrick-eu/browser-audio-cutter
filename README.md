@@ -10,6 +10,7 @@ The same code runs at [snipaudio.com](https://snipaudio.com/).
 |---|---|
 | [`web/index.html`](web/index.html), [`web/app.js`](web/app.js) | Audio cutter: waveform, draggable start/end markers, millisecond time inputs, fade in/out, several regions each exported on its own, MP3 or WAV export |
 | [`web/audio-joiner/`](web/audio-joiner/) | Audio joiner: put clips in order (drag or arrow buttons), per-clip fades, crossfade between clips, preview, export one MP3 or WAV |
+| [`web/bpm-finder/`](web/bpm-finder/) | BPM finder: tempo and key of a song worked out in the browser (own FFT, onset autocorrelation, key-profile matching in a Web Worker), both half-time and double-time readings, a click track to check the beat by ear, tap tempo |
 | [`tools/`](tools/) | Node scripts for testing audio tools: predictable test WAVs, sample-by-sample WAV comparison, MP3 header reader, lamejs sample-rate probe |
 | [`data/`](data/) | Measured lamejs output sample rates, and a dated feature audit of the top 10 results for "audio cutter" |
 | [`docs/`](docs/) | Notes on the measurements and on how the audit was made |
@@ -19,7 +20,7 @@ The same code runs at [snipaudio.com](https://snipaudio.com/).
 ```bash
 cd web
 python3 -m http.server 8000
-# open http://localhost:8000/ and http://localhost:8000/audio-joiner/
+# open http://localhost:8000/, http://localhost:8000/audio-joiner/ and http://localhost:8000/bpm-finder/
 ```
 
 Any static file server works. There is nothing to install or build.

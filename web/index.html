@@ -268,5 +268,53 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 </main>
 <script src="lame.min.js"></script>
 <script src="app.js"></script>
+<!-- webmcp:start -->
+<script>
+// WebMCP: lets an AI agent in this browser tab list SnipAudio's tools, read one tool's steps, open a tool page,
+// and search the help text on this page. Registers only where the browser provides modelContext; does nothing otherwise.
+// Tool data is inline, so visitors download nothing extra.
+(() => {
+  const mc = document.modelContext || navigator.modelContext;
+  if (!mc || typeof mc.registerTool !== 'function') return;
+  const TOOLS = [{"id":"audio-cutter","name":"Audio Cutter","summary":"Cut part of one file","url":"https://snipaudio.com/","how_to":["Drop an audio file into the box above or tap Choose audio file. MP3 files open directly, so it works as an MP3 cutter without converting first.","Drag the two handles on the waveform, or type the start and end time in seconds. To use it as an audio trimmer, set them where the part you want to keep begins and ends.","Add a fade in or fade out if you want, then press Play region to hear the cut.","Need more than one clip? Press + Add region and mark another part.","Pick MP3 or WAV and press Download next to each region."]},{"id":"audio-joiner","name":"Audio Joiner","summary":"Merge several files into one","url":"https://snipaudio.com/audio-joiner/","how_to":["Choose two or more audio files. You can add more later.","Drag the clips into the order you want.","Set a fade in or fade out for any clip, and a crossfade between clips if you want smooth changes.","Press Preview merged track to listen.","Pick MP3 or WAV and press Merge and download."]},{"id":"bpm-finder","name":"BPM Finder","summary":"Find the tempo and key of a song","url":"https://snipaudio.com/bpm-finder/","how_to":["Drop a song into the box above or tap Choose audio file.","Wait a few seconds while your browser works out the tempo and key. Longer songs take longer.","If the tempo feels twice too fast or too slow, pick the other reading.","Press Play with clicks and listen. If the clicks sit on the beat, the reading fits.","No file? Use Tap tempo and tap along while the song plays."]},{"id":"m4a-to-mp3","name":"M4A to MP3","summary":"Convert M4A files to MP3","url":"https://snipaudio.com/m4a-to-mp3/","how_to":["Drop one or more M4A files into the box above, or tap Choose M4A files.","Pick MP3 or WAV, a bitrate and a sample rate. Change the volume if the file is too quiet or too loud.","To keep only part of a file, type a start and end time in seconds.","Press Convert, then Download next to each file."]},{"id":"mp3-to-wav","name":"MP3 to WAV","summary":"Convert MP3 files to WAV","url":"https://snipaudio.com/mp3-to-wav/","how_to":["Drop one or more MP3 files into the box above, or tap Choose MP3 files.","Pick a bit depth and a sample rate. Same as the MP3 keeps the MP3's own sample rate.","To keep only part of a file, type a start and end time in seconds. Change the volume if you need to.","Press Convert, then Download WAV next to each file."]},{"id":"wav-to-mp3","name":"WAV to MP3","summary":"Convert WAV files to MP3","url":"https://snipaudio.com/wav-to-mp3/","how_to":["Drop one or more WAV files into the box above, or tap Choose WAV files.","Pick a bitrate, a sample rate and mono or stereo. Change the volume if the file is too quiet or too loud.","To keep only part of a file, type a start and end time in seconds.","Press Convert, then Download next to each file."]}];
+  const ORIGIN = 'https://snipaudio.com';
+  const ac = new AbortController();
+  addEventListener('pagehide', () => ac.abort(), { once: true });
+  const text = v => JSON.stringify(v);
+  const tools = [
+    { name: 'list_audio_tools',
+      description: '::ILANG [READ_ONLY] Return every SnipAudio tool: id, name, summary, url. Tools run in the visitor browser; files are not uploaded.',
+      inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+      annotations: { readOnlyHint: true },
+      execute: async () => text({ tools: TOOLS.map(({ id, name, summary, url }) => ({ id, name, summary, url })) }) },
+    { name: 'get_audio_tool',
+      description: '::ILANG [READ_ONLY] Return one tool by id with its how-to steps and url. [ON:unknown_id] returns error not_found and known ids. For settings, limits and FAQ fetch the tool url with Accept:text/markdown or GET /api/agent/tools/{id}.',
+      inputSchema: { type: 'object', properties: { id: { type: 'string', enum: TOOLS.map(t => t.id) } }, required: ['id'], additionalProperties: false },
+      annotations: { readOnlyHint: true },
+      execute: async ({ id } = {}) => { const t = TOOLS.find(x => x.id === id); return text(t ? { ...t, details_api: `${ORIGIN}/api/agent/tools/${t.id}` } : { error: 'not_found', known_ids: TOOLS.map(x => x.id) }); } },
+    { name: 'search_page_help',
+      description: '::ILANG [READ_ONLY] Search the help and FAQ text on the current page for words in query; return matching questions with answers and source url. [MUST] quote answers with their qualifiers. [ON:no_match] returns an empty list.',
+      inputSchema: { type: 'object', properties: { query: { type: 'string', minLength: 1, maxLength: 200 } }, required: ['query'], additionalProperties: false },
+      annotations: { readOnlyHint: true },
+      execute: async ({ query = '' } = {}) => {
+        const words = String(query).toLowerCase().match(/[a-z0-9]+/g) || [];
+        const hits = [];
+        for (const h of document.querySelectorAll('main section h3')) {
+          let answer = '', n = h.nextElementSibling;
+          while (n && !/^H[23]$/.test(n.tagName)) { answer += (answer ? ' ' : '') + n.textContent.trim(); n = n.nextElementSibling; }
+          const hay = (h.textContent + ' ' + answer).toLowerCase(), score = words.filter(w => hay.includes(w)).length;
+          if (score) hits.push({ score, question: h.textContent.trim(), answer, source_url: ORIGIN + location.pathname });
+        }
+        return text({ query, results: hits.sort((a, b) => b.score - a.score).slice(0, 5).map(({ score, ...r }) => r) });
+      } },
+    { name: 'open_audio_tool',
+      description: '::ILANG [NAVIGATION] Open a SnipAudio tool page in this tab by id. The visitor then picks files in that page; nothing is uploaded.',
+      inputSchema: { type: 'object', properties: { id: { type: 'string', enum: TOOLS.map(t => t.id) } }, required: ['id'], additionalProperties: false },
+      execute: async ({ id } = {}) => { const t = TOOLS.find(x => x.id === id); if (!t) return text({ error: 'not_found', known_ids: TOOLS.map(x => x.id) }); location.assign(new URL(t.url).pathname); return text({ opened: t.url }); } },
+  ];
+  for (const t of tools) { try { const p = mc.registerTool(t, { signal: ac.signal }); if (p && p.catch) p.catch(() => {}); } catch {} }
+})();
+</script>
+<!-- webmcp:end -->
 </body>
 </html>

@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  // Static site ../cutter-site plus a small Worker (src/worker.js) for agent resources.
+  // The Worker runs first only on the 9 page paths (Markdown negotiation + Link header);
+  // other static files are served without invoking it. Paths with no static file reach the Worker.
+  "name": "snipaudio",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "../web",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/", "/audio-joiner/", "/bpm-finder/", "/m4a-to-mp3/", "/mp3-to-wav/", "/wav-to-mp3/", "/about/", "/privacy/", "/contact/"]
+  },
+  "observability": { "enabled": false },
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "snipaudio.com", "custom_domain": true }
+  ]
+}

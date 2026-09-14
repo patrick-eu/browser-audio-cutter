@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BPM Finder – Find the BPM and Key of a Song in Your Browser</title>
-<meta name="description" content="Free BPM and key finder that runs in your browser. Drop a song to get its tempo and key, choose between half-time and double-time readings, check the beat with a click track, or use tap tempo. Your file is never uploaded.">
+<title>About – SnipAudio</title>
+<meta name="description" content="SnipAudio is a small set of free audio tools made by patrickeu that run in your browser.">
 <style>
 :root{
   --bg:#060916;--card:#0f1424;--panel2:#171d31;--ink:#e9eff6;--muted:#9cacc1;--line:#2d3655;
@@ -144,132 +144,31 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 .tool[aria-current="page"] svg{color:var(--accent)}
 .tool[aria-current="page"]:hover{box-shadow:inset 0 0 0 1px var(--accent)}
 @media (max-width:520px){.tool{gap:8px;padding:10px;min-height:72px}.tool b{font-size:.82rem;letter-spacing:.05em}.tool small{font-size:.76rem}}
-
-/* bpm finder */
-.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
-.panel{border:1px solid var(--line);background:rgba(4,6,15,.6);padding:14px 16px}
-.panel h2{margin-bottom:6px}
-.big{margin:0;font:700 clamp(2.2rem,8vw,3.2rem)/1.1 var(--mono);color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 0 18px rgba(0,197,211,.35);overflow-wrap:anywhere}
-.big span{font-size:.4em;color:var(--muted);letter-spacing:.1em}
-.conf{margin:8px 0 10px;padding-left:10px;border-left:3px solid var(--muted);font-size:.9rem;color:#c9d3e1}
-.conf[data-level=strong]{border-color:var(--accent)}
-.conf[data-level=moderate]{border-color:var(--accent2)}
-.conf[data-level=weak]{border-color:#ff4d6d}
-.choice{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
-.choice .btn[aria-checked=true]{color:var(--ink);background:rgba(254,120,2,.16);box-shadow:inset 0 0 0 2px var(--accent2)}
-.warn{margin:12px 0 0;padding:10px 12px;border:1px solid rgba(254,120,2,.55);background:rgba(254,120,2,.08);color:var(--ink);font-size:.9rem}
-.tapcard{margin-top:22px}
-#tap{min-height:96px;width:100%;font-size:1.1rem;touch-action:manipulation;user-select:none}
-.tapread{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin:12px 0 0}
 </style>
 </head>
 <body>
 <main>
-  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="./" aria-current="page" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a></nav>
-  <h1>BPM Finder</h1>
-  <p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything runs in your browser. Your file is never uploaded to any server.</span></p>
-  <p class="facts">No sign-up · Unlimited songs</p>
-
-  <div class="card">
-    <label id="drop">
-      <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm">
-      <span>
-        <strong>Drop a song to find its BPM and key</strong>
-        <span class="hint">MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them.</span><br>
-        <span class="btn">Choose audio file</span>
-      </span>
-    </label>
-    <p id="status" role="status" aria-live="polite"></p>
-
-    <div id="result" hidden>
-      <p id="filename"></p>
-      <div class="res">
-        <div class="panel">
-          <h2>Tempo</h2>
-          <p id="tooShort" class="conf" data-level="weak" hidden>This file is too short to measure a tempo. Use at least 7 seconds of audio.</p>
-          <div id="tempoBody">
-            <p class="big"><output id="bpm">—</output> <span>BPM</span></p>
-            <p id="tempoConf" class="conf"></p>
-            <p class="sub" style="margin:0">Half or double time? The same beat can be counted both ways. Pick the reading that matches how you count it:</p>
-            <div class="choice" role="radiogroup" aria-label="Tempo reading">
-              <button id="optA" class="btn ghost small" type="button" role="radio" aria-checked="true"></button>
-              <button id="optB" class="btn ghost small" type="button" role="radio" aria-checked="false"></button>
-            </div>
-            <div class="row" style="margin-top:10px"><button id="clicks" class="btn" type="button">▶ Play with clicks</button><span class="sub">Plays your song with a click on every beat of the reading you picked.</span></div>
-            <p id="others" class="sub" style="margin:10px 0 0"></p>
-            <p id="varies" class="warn" hidden></p>
-          </div>
-        </div>
-        <div class="panel">
-          <h2>Key</h2>
-          <p class="big"><output id="key">—</output></p>
-          <p id="keyConf" class="conf"></p>
-          <p id="keyOthers" class="sub" style="margin:0"></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card tapcard">
-    <h2>Tap tempo</h2>
-    <p class="sub" style="margin:0 0 12px">No file? Tap along with the beat. You can also press the T key.</p>
-    <button id="tap" class="btn" type="button">Tap</button>
-    <div class="tapread">
-      <p class="big" style="margin:0"><output id="tapBpm">—</output> <span>BPM</span></p>
-      <span class="sub" id="tapCount">0 taps</span>
-      <button id="tapReset" class="btn ghost small" type="button">Reset</button>
-    </div>
-    <p class="sub" id="tapAlt" style="margin:6px 0 0"></p>
-  </div>
-
-  <section>
-    <h2>How to use the BPM key finder</h2>
-    <ol>
-      <li>Drop a song into the box above or tap <em>Choose audio file</em>.</li>
-      <li>Wait a few seconds while your browser works out the tempo and key. Longer songs take longer.</li>
-      <li>If the tempo feels twice too fast or too slow, pick the other reading.</li>
-      <li>Press <em>Play with clicks</em> and listen. If the clicks sit on the beat, the reading fits.</li>
-      <li>No file? Use <em>Tap tempo</em> and tap along while the song plays.</li>
-    </ol>
+  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a></nav>
+  <h1>About</h1>
+  <section style="margin-top:0">
+    <p>SnipAudio (snipaudio.com) is a small set of free audio tools made by patrickeu. Every tool runs in your browser, so your files stay on your device and there is nothing to install or sign up for.</p>
   </section>
-
   <section>
-    <h2>When the result can be wrong</h2>
-    <p>Both numbers are estimates worked out from the sound. These are the cases we saw go wrong or become unclear while testing:</p>
-    <h3>Half time and double time</h3>
-    <p>A beat at 70 BPM with busy hi-hats can also be counted as 140 BPM, and a 174 BPM drum and bass loop can read as 87. The finder can't know how you count, so it always shows both readings and lets you choose.</p>
-    <h3>Songs that speed up or slow down</h3>
-    <p>One number can't describe a song whose tempo changes. For files of 40 seconds or longer, the finder also checks 20-second sections, and if they disagree by more than 4% it shows the range it found.</p>
-    <h3>Music without a steady beat</h3>
-    <p>Sustained pads with no drums gave a weak tempo reading. When the confidence says <em>Weak</em>, don't rely on the number.</p>
-    <h3>Tracks with few pitched notes</h3>
-    <p>Drum-only tracks and noise don't have a key, so the finder says so instead of guessing.</p>
-    <h3>Major or its relative minor</h3>
-    <p>C major and A minor use the same notes, so they are easy to mix up. The next closest keys are listed under the result. The finder gives one key for the whole file, even if the song changes key.</p>
+    <h2>The tools</h2>
+    <h3><a href="../">Audio Cutter</a></h3>
+    <p>Cut part of an audio file, add a fade in or fade out, and save it as MP3 or WAV.</p>
+    <h3><a href="../audio-joiner/">Audio Joiner</a></h3>
+    <p>Put several audio files in order and merge them into one MP3 or WAV file.</p>
+    <h3><a href="../bpm-finder/">BPM Finder</a></h3>
+    <p>Find the tempo and key of a song, or tap along to measure a beat.</p>
   </section>
-
   <section>
-    <h2>BPM and key finder FAQ</h2>
-    <h3>Is my song uploaded?</h3>
-    <p>No. Your browser decodes and analyzes the file on your device. The only files your browser downloads are this page and its two scripts, both from this site.</p>
-    <h3>Can I use it as a song key finder only?</h3>
-    <p>Yes. Every file gets a key reading next to the tempo, as a major or minor key, for example A minor or F♯ major.</p>
-    <h3>What does the confidence line mean?</h3>
-    <p>For tempo, it describes how much the best tempo stands out from other tempos in the same file. For key, it describes how well the notes match the key and how far ahead it is of the next closest key. It is not a chance of being right.</p>
-    <h3>How was it tested?</h3>
-    <p>With test tracks we made at known tempos and keys: a click track, drum loops, a tempo change, chord progressions, sustained pads and noise. It has not been checked against a large collection of real recordings, so use <em>Play with clicks</em> to check the result by ear.</p>
-    <h3>How does tap tempo work?</h3>
-    <p>It divides the time from your first tap to your last by the number of beats in between. Tap for longer to even out small timing errors. A pause of more than 2.5 seconds starts a new count.</p>
-    <h3>Is there a file size or length limit?</h3>
-    <p>This page sets none. The decoded song is kept in memory while you listen, so very long files need more memory and the practical limit depends on your device.</p>
+    <h2>Source code</h2>
+    <p>The code for these tools is public on <a href="https://github.com/patrick-eu/browser-audio-cutter" rel="noopener">GitHub</a>. Questions or a bug to report? See the <a href="../contact/">contact page</a>.</p>
   </section>
-
   <footer>
-    Tempo and key are calculated by this page's own code in your browser.<br>
     <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
   </footer>
 </main>
-<script src="analyze.js"></script>
-<script src="bpm.js"></script>
 </body>
 </html>

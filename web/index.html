@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audio Cutter – Cut Audio Online in Your Browser</title>
+<meta name="description" content="Free audio cutter that runs in your browser. Drag markers on the waveform, set start and end to the millisecond, add fade in and fade out, mark several regions and export each as MP3 or WAV. Your file is never uploaded.">
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#17181c;--muted:#666b76;--line:#e1e4ea;--accent:#0b7a75;--accent-ink:#fff;--wave:#9aa3b2;--sel:rgba(11,122,117,.16);--sel-active:rgba(11,122,117,.30);--ok:#0b7a57;--fade:#e0662b}
+@media (prefers-color-scheme:dark){:root{--bg:#111316;--card:#1a1d22;--ink:#e9ebef;--muted:#9aa1ad;--line:#2c3037;--accent:#3cc6bd;--accent-ink:#0d1114;--wave:#6d7582;--sel:rgba(60,198,189,.14);--sel-active:rgba(60,198,189,.30);--ok:#55d6a4;--fade:#ff9b61}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:960px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:clamp(1.6rem,4vw,2.2rem);margin:0 0 4px;letter-spacing:-.01em}
+.privacy{margin:0 0 4px;color:var(--ok);font-weight:600}
+.facts{margin:0 0 18px;color:var(--muted);font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+#drop{display:block;border:2px dashed var(--line);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer}
+#drop.over,#drop:hover{border-color:var(--accent)}
+#drop strong{display:block;font-size:1.15rem;margin-bottom:4px}
+#file{position:absolute;width:1px;height:1px;opacity:0}
+#file:focus-visible+span .btn{outline:3px solid var(--accent);outline-offset:2px}
+.hint{color:var(--muted);font-size:.9rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;min-height:44px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.small{min-height:44px;padding:6px 12px;font-size:.9rem}
+#drop .btn{margin-top:12px}
+#status{min-height:1.5em;margin:10px 0 0}
+#editor{margin-top:6px}
+#filename{font-weight:600;overflow-wrap:anywhere;margin:0 0 8px}
+.wavewrap{position:relative}
+#wave{width:100%;height:170px;display:block;background:var(--bg);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:crosshair}
+.timeline{display:flex;justify-content:space-between;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;margin-top:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 20px;margin-top:14px}
+.field label{display:flex;justify-content:space-between;font-weight:600;font-size:.95rem}
+.field output{color:var(--accent);font-variant-numeric:tabular-nums}
+.field p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+input[type=number],select{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);min-height:44px;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;height:32px;accent-color:var(--accent)}
+h2{font-size:1.2rem;margin:0 0 8px}
+#regions{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+#regions li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+#regions li.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+#regions .label{flex:1 1 180px;font-variant-numeric:tabular-nums;cursor:pointer}
+#regions .label b{margin-right:6px}
+.sub{color:var(--muted);font-size:.85rem}
+section{margin-top:36px}
+section h3{font-size:1rem;margin:16px 0 4px}
+footer{margin-top:40px;color:var(--muted);font-size:.85rem}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Audio Cutter</h1>
+  <p class="privacy">🔒 Everything runs in your browser. Your file is never uploaded to any server.</p>
+  <p class="facts">No sign-up · Unlimited cuts · No watermark</p>
+  <p><a href="audio-joiner/">Merge several audio files into one with the audio joiner →</a></p>
+
+  <div class="card">
+    <label id="drop">
+      <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm">
+      <span>
+        <strong>Drop an audio file to cut</strong>
+        <span class="hint">MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them.</span><br>
+        <span class="btn">Choose audio file</span>
+      </span>
+    </label>
+    <p id="status" role="status" aria-live="polite"></p>
+
+    <div id="editor" hidden>
+      <p id="filename"></p>
+      <div class="wavewrap">
+        <canvas id="wave" aria-label="Waveform. Drag the handles of the highlighted region to set start and end."></canvas>
+      </div>
+      <div class="timeline"><span>0:00.000</span><span id="durLabel"></span></div>
+
+      <div class="row">
+        <button id="play" class="btn" type="button">▶ Play region</button>
+        <button id="add" class="btn ghost" type="button">+ Add region</button>
+        <span class="sub">Drag the handles on the waveform, or type exact times below.</span>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="start">Start (seconds)</label>
+          <input id="start" type="number" min="0" step="0.001" inputmode="decimal">
+          <p>Millisecond steps: 12.345 = 12 s 345 ms.</p>
+        </div>
+        <div class="field">
+          <label for="end">End (seconds)</label>
+          <input id="end" type="number" min="0" step="0.001" inputmode="decimal">
+          <p>Length: <output id="len"></output></p>
+        </div>
+        <div class="field">
+          <label for="fadeIn">Fade in <output id="fadeInV"></output></label>
+          <input id="fadeIn" type="range" min="0" max="10" step="0.1" value="0">
+          <p>Volume rises from silence over this many seconds. Shown in orange on the waveform.</p>
+        </div>
+        <div class="field">
+          <label for="fadeOut">Fade out <output id="fadeOutV"></output></label>
+          <input id="fadeOut" type="range" min="0" max="10" step="0.1" value="0">
+          <p>Volume falls to silence over this many seconds at the end.</p>
+        </div>
+        <div class="field">
+          <label for="format">Export format</label>
+          <select id="format">
+            <option value="mp3">MP3</option>
+            <option value="wav">WAV (16-bit PCM)</option>
+          </select>
+          <p id="formatNote"></p>
+        </div>
+        <div class="field">
+          <label for="bitrate">MP3 bitrate</label>
+          <select id="bitrate">
+            <option value="128">128 kbps</option>
+            <option value="192" selected>192 kbps</option>
+            <option value="256">256 kbps</option>
+            <option value="320">320 kbps</option>
+          </select>
+          <p>Estimated size of the active region: <output id="size"></output></p>
+        </div>
+      </div>
+
+      <h2 style="margin-top:20px">Regions</h2>
+      <p class="sub" style="margin:0">Fades and format apply to every region. Each region downloads as its own file.</p>
+      <ul id="regions"></ul>
+    </div>
+  </div>
+
+  <section>
+    <h2>How to cut audio online</h2>
+    <ol>
+      <li>Drop an audio file into the box above or tap <em>Choose audio file</em>.</li>
+      <li>Drag the two handles on the waveform, or type the start and end time in seconds.</li>
+      <li>Add a fade in or fade out if you want, then press <em>Play region</em> to hear the cut.</li>
+      <li>Need more than one clip? Press <em>+ Add region</em> and mark another part.</li>
+      <li>Pick MP3 or WAV and press <em>Download</em> next to each region.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Audio cutter FAQ</h2>
+    <h3>Is my audio uploaded?</h3>
+    <p>No. The file is decoded, cut and encoded by this page inside your browser. The only files your browser downloads are this page and its two scripts, both from this site.</p>
+    <h3>Which formats can I export?</h3>
+    <p>MP3 at 128, 192, 256 or 320 kbps, or WAV as 16-bit PCM. Both are written at 44.1 kHz, in stereo for stereo sources and mono for mono sources.</p>
+    <h3>MP3 or WAV?</h3>
+    <p>WAV contains exactly the samples between your start and end times. MP3 is smaller, but MP3 encoding adds a short stretch of silence at the start of the file and the audio is re-compressed, so pick WAV when the exact cut point matters.</p>
+    <h3>Is there a file size or length limit?</h3>
+    <p>This page sets none. The whole decoded file is kept in memory while you edit, so very long files need more memory and the practical limit depends on your device.</p>
+  </section>
+
+  <footer>
+    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="LICENSE-lamejs.txt">LGPL 3.0</a>.
+  </footer>
+</main>
+<script src="lame.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

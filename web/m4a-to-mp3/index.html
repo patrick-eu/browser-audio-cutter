@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About – SnipAudio</title>
-<meta name="description" content="SnipAudio is a small set of free audio tools made by patrick-eu that run in your browser.">
+<title>M4A to MP3 Converter – Convert M4A to MP3 Online Free in Your Browser</title>
+<meta name="description" content="Convert M4A to MP3 in your browser. Your files are never uploaded. Choose 128 to 320 kbps and 44.1 or 48 kHz, change volume, trim, convert several files at once. No sign-up.">
 <style>
 :root{
   --bg:#060916;--card:#0f1424;--panel2:#171d31;--ink:#e9eff6;--muted:#9cacc1;--line:#2d3655;
@@ -145,33 +145,124 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 .tool[aria-current="page"]:hover{box-shadow:inset 0 0 0 1px var(--accent)}
 @media (max-width:520px){.tool{gap:8px;padding:10px;min-height:72px}.tool b{font-size:.82rem;letter-spacing:.05em}.tool small{font-size:.76rem}}
 @media (max-width:520px){.tools{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:22px}.tool{grid-column:auto!important;flex-direction:column;justify-content:center;gap:4px;min-height:60px;padding:8px 2px;text-align:center}.tool svg{width:20px;height:20px}.tool small{display:none}.tool b{font-size:.62rem;letter-spacing:.02em;line-height:1.2}}
+
+/* m4a to mp3 */
+[hidden]{display:none!important}
+.lock{font-size:1.02rem;padding:12px 16px}
+#list{margin-top:18px}
+#files{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+#files li{display:grid;grid-template-columns:minmax(0,1.3fr) auto;gap:8px 14px;align-items:center;padding:10px 12px;border:1px solid var(--line);background:rgba(4,6,15,.6)}
+.fname b{display:block;font:700 .92rem/1.35 var(--mono);overflow-wrap:anywhere}
+.fname .dur{color:var(--muted);font:600 .8rem/1.4 var(--mono);font-variant-numeric:tabular-nums}
+.trim{display:flex;flex-wrap:wrap;gap:8px}
+.trim label{display:flex;flex-direction:column;font:700 .72rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.trim input{width:96px;margin-top:4px}
+.st{grid-column:1 / 2;margin:0;font:600 .82rem/1.4 var(--mono);color:var(--muted);min-height:1.2em}
+.st[data-state=done]{color:var(--accent)}
+.st[data-state=error]{color:#ff6b81}
+.st[data-state=working]{color:var(--accent2)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+a.btn{text-decoration:none}
+@media (max-width:620px){#files li{grid-template-columns:minmax(0,1fr)}.st{grid-column:auto}.acts{justify-content:flex-start}}
 </style>
 </head>
 <body>
 <main>
-  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a></nav>
-  <h1>About</h1>
-  <section style="margin-top:0">
-    <p>SnipAudio (snipaudio.com) is a small set of free audio tools made by patrick-eu. Every tool runs in your browser, so your files stay on your device and there is nothing to install or sign up for.</p>
-  </section>
+  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="./" aria-current="page" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a></nav>
+  <h1>M4A to MP3</h1>
+  <p class="privacy lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Your files never leave your browser. Nothing is uploaded to any server.</span></p>
+  <p class="facts">No sign-up · No account needed to download · Unlimited conversions</p>
+
+  <div class="card">
+    <label id="drop">
+      <input id="file" type="file" multiple accept=".m4a,audio/mp4,audio/x-m4a,audio/m4a">
+      <span>
+        <strong>Drop M4A files to convert to MP3</strong>
+        <span class="hint">M4A files with AAC audio. You can add several files at once.</span><br>
+        <span class="btn">Choose M4A files</span>
+      </span>
+    </label>
+
+    <div class="grid">
+      <div class="field">
+        <label for="format">Output format</label>
+        <select id="format">
+          <option value="mp3">MP3</option>
+          <option value="wav">WAV (16-bit PCM)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="bitrate">MP3 bitrate</label>
+        <select id="bitrate">
+          <option value="128">128 kbps</option>
+          <option value="160">160 kbps</option>
+          <option value="192" selected>192 kbps</option>
+          <option value="256">256 kbps</option>
+          <option value="320">320 kbps</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="rate">Sample rate</label>
+        <select id="rate">
+          <option value="44100" selected>44.1 kHz</option>
+          <option value="48000">48 kHz</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="volume">Volume <output id="volumeV">100%</output></label>
+        <input id="volume" type="range" min="10" max="200" step="5" value="100">
+        <p id="volNote"></p>
+      </div>
+    </div>
+
+    <div id="list" hidden>
+      <h2 style="margin-top:20px">Files</h2>
+      <p class="sub" style="margin:0">Settings apply to every file. Set start and end to keep only part of a file.</p>
+      <ul id="files"></ul>
+      <div class="row"><button id="all" class="btn" type="button" disabled>Convert</button></div>
+    </div>
+  </div>
+
+  <aside style="margin:16px 0 0;padding:12px 14px;border:1px dashed var(--line);color:#c9d3e1;font-size:.92rem">
+    Converting a song and want the vocals or the music on their own? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can remove vocals or instrumentals from a song with AI.
+    <small style="display:block;margin-top:6px;color:var(--muted)">Affiliate link: I may earn a commission if you buy. LALAL.AI works on files you upload to it, unlike the tools on this site.</small>
+  </aside>
+
   <section>
-    <h2>The tools</h2>
-    <h3><a href="../">Audio Cutter</a></h3>
-    <p>Cut part of an audio file, add a fade in or fade out, and save it as MP3 or WAV.</p>
-    <h3><a href="../audio-joiner/">Audio Joiner</a></h3>
-    <p>Put several audio files in order and merge them into one MP3 or WAV file.</p>
-    <h3><a href="../bpm-finder/">BPM Finder</a></h3>
-    <p>Find the tempo and key of a song, or tap along to measure a beat.</p>
-    <h3><a href="../m4a-to-mp3/">M4A to MP3</a></h3>
-    <p>Convert M4A files with AAC audio to MP3 or WAV, several files at a time.</p>
+    <h2>How to convert M4A to MP3</h2>
+    <ol>
+      <li>Drop one or more M4A files into the box above, or tap <em>Choose M4A files</em>.</li>
+      <li>Pick MP3 or WAV, a bitrate and a sample rate. Change the volume if the file is too quiet or too loud.</li>
+      <li>To keep only part of a file, type a start and end time in seconds.</li>
+      <li>Press <em>Convert</em>, then <em>Download</em> next to each file.</li>
+    </ol>
   </section>
+
   <section>
-    <h2>Source code</h2>
-    <p>The code for these tools is public on GitHub at <a href="https://github.com/patrick-eu/browser-audio-cutter" rel="noopener">patrick-eu/browser-audio-cutter</a>. Questions or a bug to report? See the <a href="../contact/">contact page</a>.</p>
+    <h2>M4A to MP3 converter FAQ</h2>
+    <h3>Are my files uploaded?</h3>
+    <p>No. Your browser decodes the M4A and encodes the MP3 on your device. The only files your browser downloads are this page and its three scripts, all from this site.</p>
+    <h3>Do I need an account to download?</h3>
+    <p>No. There is no sign-up or login on this site. The download button saves the converted file straight from your browser.</p>
+    <h3>Which bitrates and sample rates can I choose?</h3>
+    <p>MP3 at 128, 160, 192, 256 or 320 kbps, at 44.1 kHz or 48 kHz. WAV is 16-bit at the same two sample rates. Mono files stay mono and stereo files stay stereo. Files with more than two channels are mixed down to stereo.</p>
+    <h3>Which M4A files work?</h3>
+    <p>M4A files with AAC audio. Apple Lossless (ALAC) M4A files did not decode in the Chromium browser we tested with. If your browser can't decode a file, the page tells you.</p>
+    <h3>Does converting M4A to MP3 lose quality?</h3>
+    <p>AAC and MP3 are both lossy formats, so converting from one to the other can't add back detail that was already removed. A higher bitrate keeps more of what is left, and gives a larger file.</p>
+    <h3>Are song titles and cover art kept?</h3>
+    <p>No. The MP3 contains the audio only. Title, artist and cover art from the M4A are not copied.</p>
+    <h3>Why is the MP3 a little longer than the M4A?</h3>
+    <p>MP3 encoding pads the audio to whole frames, so the MP3 comes out a few hundredths of a second longer. WAV keeps the exact length.</p>
+    <h3>Is there a limit on file size or number of files?</h3>
+    <p id="limitFaq">This page sets none, but your device does. Each file is decoded into memory while it converts. On our test computer, with about 3 GB of free memory, a 45-minute M4A converted and a 60-minute M4A crashed the browser tab while decoding. Converting takes time too: a 10-minute file took about a minute there. Files are converted one after another.</p>
   </section>
+
   <footer>
+    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="../LICENSE-lamejs.txt">LGPL 3.0</a>.<br>
     <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
   </footer>
 </main>
+<script src="convert.js"></script>
 </body>
 </html>

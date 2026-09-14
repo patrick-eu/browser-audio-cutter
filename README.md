@@ -11,6 +11,7 @@ The same code runs at [snipaudio.com](https://snipaudio.com/).
 | [`web/index.html`](web/index.html), [`web/app.js`](web/app.js) | Audio cutter: waveform, draggable start/end markers, millisecond time inputs, fade in/out, several regions each exported on its own, MP3 or WAV export |
 | [`web/audio-joiner/`](web/audio-joiner/) | Audio joiner: put clips in order (drag or arrow buttons), per-clip fades, crossfade between clips, preview, export one MP3 or WAV |
 | [`web/bpm-finder/`](web/bpm-finder/) | BPM finder: tempo and key of a song worked out in the browser (own FFT, onset autocorrelation, key-profile matching in a Web Worker), both half-time and double-time readings, a click track to check the beat by ear, tap tempo |
+| [`web/m4a-to-mp3/`](web/m4a-to-mp3/) | M4A to MP3 converter: decodes AAC M4A in the browser, encodes MP3 (128–320 kbps) or WAV at 44.1 or 48 kHz in a Web Worker, sending audio in 10-second chunks; volume, per-file trim, several files at once |
 | [`tools/`](tools/) | Node scripts for testing audio tools: predictable test WAVs, sample-by-sample WAV comparison, MP3 header reader, lamejs sample-rate probe |
 | [`data/`](data/) | Measured lamejs output sample rates, and a dated feature audit of the top 10 results for "audio cutter" |
 | [`docs/`](docs/) | Notes on the measurements and on how the audit was made |
@@ -20,7 +21,7 @@ The same code runs at [snipaudio.com](https://snipaudio.com/).
 ```bash
 cd web
 python3 -m http.server 8000
-# open http://localhost:8000/, http://localhost:8000/audio-joiner/ and http://localhost:8000/bpm-finder/
+# open http://localhost:8000/, /audio-joiner/, /bpm-finder/ and /m4a-to-mp3/
 ```
 
 Any static file server works. There is nothing to install or build.

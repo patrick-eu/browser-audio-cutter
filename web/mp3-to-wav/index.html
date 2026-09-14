@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audio Joiner – Merge Audio Files Online in Your Browser</title>
-<meta name="description" content="Online audio joiner: merge audio files into one track in your browser. Combine MP3 and WAV clips, drag them into order, add fades and crossfades, preview, then export MP3 or WAV. Your files are never uploaded.">
+<title>MP3 to WAV Converter – Convert MP3 to WAV in Your Browser</title>
+<meta name="description" content="Convert MP3 to WAV in your browser. Your files are never uploaded. Choose 16-bit, 24-bit or 32-bit float, keep the MP3 sample rate or pick 22.05 to 96 kHz, trim, change volume, convert several files at once. No sign-up.">
 <style>
 :root{
   --bg:#060916;--card:#0f1424;--panel2:#171d31;--ink:#e9eff6;--muted:#9cacc1;--line:#2d3655;
@@ -145,106 +145,118 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 .tool[aria-current="page"]:hover{box-shadow:inset 0 0 0 1px var(--accent)}
 @media (max-width:520px){.tool{gap:8px;padding:10px;min-height:72px}.tool b{font-size:.82rem;letter-spacing:.05em}.tool small{font-size:.76rem}}
 @media (max-width:520px){.tools{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:22px}.tool{grid-column:auto!important;flex-direction:column;justify-content:center;gap:4px;min-height:60px;padding:8px 2px;text-align:center}.tool svg{width:20px;height:20px}.tool small{display:none}.tool b{font-size:.62rem;letter-spacing:.02em;line-height:1.2}}
-/* phones: the file box comes first; the intro line and the facts line follow it */
-@media (max-width:520px){main{display:flex;flex-direction:column}main>.lede,main>.facts{order:1}main>.lede{margin:18px 0 0}main>.facts{margin:10px 0 0}main>.card~*{order:2}}
+
+/* m4a to mp3 */
+[hidden]{display:none!important}
+.lock{font-size:1.02rem;padding:12px 16px}
+#list{margin-top:18px}
+#files{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+#files li{display:grid;grid-template-columns:minmax(0,1.3fr) auto;gap:8px 14px;align-items:center;padding:10px 12px;border:1px solid var(--line);background:rgba(4,6,15,.6)}
+.fname b{display:block;font:700 .92rem/1.35 var(--mono);overflow-wrap:anywhere}
+.fname .dur{color:var(--muted);font:600 .8rem/1.4 var(--mono);font-variant-numeric:tabular-nums}
+.trim{display:flex;flex-wrap:wrap;gap:8px}
+.trim label{display:flex;flex-direction:column;font:700 .72rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.trim input{width:96px;margin-top:4px}
+.st{grid-column:1 / 2;margin:0;font:600 .82rem/1.4 var(--mono);color:var(--muted);min-height:1.2em}
+.st[data-state=done]{color:var(--accent)}
+.st[data-state=error]{color:#ff6b81}
+.st[data-state=working]{color:var(--accent2)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+a.btn{text-decoration:none}
+@media (max-width:620px){#files li{grid-template-columns:minmax(0,1fr)}.st{grid-column:auto}.acts{justify-content:flex-start}}
 </style>
 </head>
 <body>
 <main>
-  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="./" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a></nav>
-  <h1>Audio Joiner</h1>
-  <p class="lede">Merge audio files into one track with this online audio joiner. Put your clips in order and combine audio files into a single MP3 or WAV.</p>
-  <p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything runs in your browser. Your files are never uploaded to any server.</span></p>
-  <p class="facts">No sign-up · Unlimited joins · No watermark</p>
+  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/" style="grid-column:1/-1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" href="./" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a></nav>
+  <h1>MP3 to WAV</h1>
+  <p class="privacy lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Your files never leave your browser. Nothing is uploaded to any server.</span></p>
+  <p class="facts">No sign-up · No account needed to download · Unlimited conversions</p>
 
   <div class="card">
     <label id="drop">
-      <input id="file" type="file" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm">
+      <input id="file" type="file" multiple accept=".mp3,audio/mpeg,audio/mp3">
       <span>
-        <strong>Add the audio files you want to merge</strong>
-        <span class="hint">Pick two or more files at once, or add them one by one. MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them.</span><br>
-        <span class="btn">Choose audio files</span>
+        <strong>Drop MP3 files to convert to WAV</strong>
+        <span class="hint">You can add several files at once.</span><br>
+        <span class="btn">Choose MP3 files</span>
       </span>
     </label>
-    <p id="status" role="status" aria-live="polite"></p>
 
-    <div id="editor" hidden>
-      <h2>Order</h2>
-      <p class="sub" style="margin:0">Drag ☰ to reorder, or use the arrow buttons. Clips play top to bottom.</p>
-      <ul id="clips"></ul>
-
-      <canvas id="timeline" aria-label="Timeline of the merged track"></canvas>
-      <div class="tl"><span>0:00.000</span><span id="total"></span></div>
-
-      <div class="grid">
-        <div class="field">
-          <label for="xfade">Crossfade between clips <output id="xfadeV"></output></label>
-          <input id="xfade" type="range" min="0" max="5" step="0.1" value="0">
-          <p>Each clip overlaps the next by this many seconds while one fades out and the other fades in. It is shortened where a clip is too short. Shown in orange on the timeline.</p>
-        </div>
-        <div class="field">
-          <label for="format">Export format</label>
-          <select id="format">
-            <option value="mp3">MP3</option>
-            <option value="wav">WAV (16-bit PCM)</option>
-          </select>
-          <p id="formatNote"></p>
-        </div>
-        <div class="field">
-          <label for="bitrate">MP3 bitrate</label>
-          <select id="bitrate">
-            <option value="128">128 kbps</option>
-            <option value="192" selected>192 kbps</option>
-            <option value="256">256 kbps</option>
-            <option value="320">320 kbps</option>
-          </select>
-          <p>Estimated file size: <output id="size"></output></p>
-        </div>
+    <div class="grid">
+      <div class="field">
+        <label for="bits">Bit depth</label>
+        <select id="bits">
+          <option value="16" selected>16-bit PCM</option>
+          <option value="24">24-bit PCM</option>
+          <option value="32">32-bit float</option>
+        </select>
       </div>
-
-      <div class="row">
-        <button id="play" class="btn ghost" type="button">▶ Preview merged track</button>
-        <button id="export" class="btn" type="button">Merge and download</button>
-        <span id="needTwo" class="sub"></span>
+      <div class="field">
+        <label for="rate">Sample rate</label>
+        <select id="rate">
+          <option value="source" selected>Same as the MP3</option>
+          <option value="22050">22.05 kHz</option>
+          <option value="44100">44.1 kHz</option>
+          <option value="48000">48 kHz</option>
+          <option value="88200">88.2 kHz</option>
+          <option value="96000">96 kHz</option>
+        </select>
       </div>
+      <div class="field">
+        <label for="volume">Volume <output id="volumeV">100%</output></label>
+        <input id="volume" type="range" min="10" max="200" step="5" value="100">
+        <p id="volNote"></p>
+      </div>
+    </div>
+
+    <div id="list" hidden>
+      <h2 style="margin-top:20px">Files</h2>
+      <p class="sub" style="margin:0">Settings apply to every file. Set start and end to keep only part of a file.</p>
+      <ul id="files"></ul>
+      <div class="row"><button id="all" class="btn" type="button" disabled>Convert</button></div>
     </div>
   </div>
 
   <aside style="margin:16px 0 0;padding:12px 14px;border:1px dashed var(--line);color:#c9d3e1;font-size:.92rem">
-    Need the vocals or the backing track of a file on its own? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can remove vocals or instrumentals from a song with AI.
+    Need a WAV of just the vocals or just the music? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can remove vocals or instrumentals from a song with AI.
     <small style="display:block;margin-top:6px;color:var(--muted)">Affiliate link: I may earn a commission if you buy. LALAL.AI works on files you upload to it, unlike the tools on this site.</small>
   </aside>
 
   <section>
-    <h2>How to merge audio files online</h2>
+    <h2>How to convert MP3 to WAV</h2>
     <ol>
-      <li>Choose two or more audio files. You can add more later.</li>
-      <li>Drag the clips into the order you want.</li>
-      <li>Set a fade in or fade out for any clip, and a crossfade between clips if you want smooth changes.</li>
-      <li>Press <em>Preview merged track</em> to listen.</li>
-      <li>Pick MP3 or WAV and press <em>Merge and download</em>.</li>
+      <li>Drop one or more MP3 files into the box above, or tap <em>Choose MP3 files</em>.</li>
+      <li>Pick a bit depth and a sample rate. <em>Same as the MP3</em> keeps the MP3's own sample rate.</li>
+      <li>To keep only part of a file, type a start and end time in seconds. Change the volume if you need to.</li>
+      <li>Press <em>Convert</em>, then <em>Download WAV</em> next to each file.</li>
     </ol>
   </section>
 
   <section>
-    <h2>Audio joiner FAQ</h2>
-    <h3>Are my files uploaded to combine them?</h3>
-    <p>No. This audio merger decodes, joins and encodes the files inside your browser. The only files your browser downloads are this page and its two scripts, all from this site.</p>
-    <h3>Can I use it as an MP3 joiner?</h3>
-    <p>Yes. Add MP3 files, put them in order and export the combined audio as one MP3 at 128, 192, 256 or 320 kbps, or as WAV. You can also mix MP3 and WAV clips in one join.</p>
-    <h3>What does the exported file sound like?</h3>
-    <p>It is written at 44.1 kHz. If any clip is stereo, the result is stereo and mono clips play in both channels; if every clip is mono, the result is mono. With WAV and no fades or crossfade, the clips follow each other sample for sample. MP3 encoding adds a short stretch of silence at the very start of the file.</p>
-    <h3>Is there a limit on files or length?</h3>
-    <p>This page sets none. All decoded clips are kept in memory while you work, so many or long files need more memory and the practical limit depends on your device.</p>
+    <h2>MP3 to WAV converter FAQ</h2>
+    <h3>Are my files uploaded?</h3>
+    <p>No. Your browser decodes the MP3 and writes the WAV on your device. The only files your browser downloads are this page and its two scripts, both from this site.</p>
+    <h3>Do I need an account to download?</h3>
+    <p>No. There is no sign-up or login on this site. The download button saves the WAV straight from your browser.</p>
+    <h3>Which bit depths and sample rates can I choose?</h3>
+    <p>16-bit PCM, 24-bit PCM or 32-bit float. For the sample rate, keep the MP3's own rate or choose 22.05, 44.1, 48, 88.2 or 96 kHz. Mono MP3s stay mono and stereo MP3s stay stereo.</p>
+    <h3>Does converting MP3 to WAV improve quality?</h3>
+    <p>No. MP3 is a lossy format, and detail removed when the MP3 was made can't come back. A WAV stores the decoded audio without further compression, which is what many audio editors and devices want. A higher bit depth or sample rate doesn't add detail that the MP3 doesn't have. In our tests, the browser's MP3 decoder also flattened any peaks that went above full scale, so those stay flat whatever bit depth you pick.</p>
+    <h3>How big will the WAV be?</h3>
+    <p>Much bigger than the MP3. A minute of stereo audio at 44.1 kHz is about 10 MB in 16-bit, about 15 MB in 24-bit and about 20 MB in 32-bit float. Each file shows its estimated WAV size before you convert. A WAV file can't be larger than 4 GB, so the page won't start a conversion that would go past that.</p>
+    <h3>Is the WAV exactly as long as the MP3?</h3>
+    <p id="lengthFaq">In our tests with MP3s made by the LAME encoder, the WAV was exactly as long as the audio the MP3 was made from. Tools that read the MP3 file itself can report it a little longer: ffprobe showed our test MP3s 0.03 to 0.06 seconds longer, because MP3 encoding pads the start and end.</p>
+    <h3>Are song titles and cover art kept?</h3>
+    <p>No. The WAV contains the audio only. Title, artist and cover art from the MP3 are not copied.</p>
+    <h3>Is there a limit on file size or number of files?</h3>
+    <p id="limitFaq">This page sets no limit on the number of files, and they are converted one after another. Each file is decoded into memory in full first. In our tests in the Chromium browser, a 60-minute stereo MP3 converted to a 16-bit, 44.1 kHz WAV in about 25 seconds, while the same file at 96 kHz and a 2-hour MP3 at 44.1 kHz failed while decoding. Your device may manage more or less. A WAV file also can't be larger than 4 GB.</p>
   </section>
 
   <footer>
-    Need just one part of a file? <a href="../">Cut a section of an audio file with the audio cutter</a>.<br>
-    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="../LICENSE-lamejs.txt">LGPL 3.0</a>.<br>
-    <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
+        <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
   </footer>
 </main>
-<script src="../lame.min.js"></script>
-<script src="joiner.js"></script>
+<script src="convert.js"></script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BPM Finder – Find the BPM and Key of a Song in Your Browser</title>
-<meta name="description" content="Free BPM and key finder that runs in your browser. Drop a song to get its tempo and key, choose between half-time and double-time readings, check the beat with a click track, or use tap tempo. Your file is never uploaded.">
+<title>WAV to MP3 Converter – Convert WAV to MP3 Online in Your Browser</title>
+<meta name="description" content="Convert WAV to MP3 in your browser. Your files are never uploaded. Choose the bitrate, sample rate (16 to 48 kHz) and mono or stereo, change volume, trim, convert several files at once. No sign-up.">
 <style>
 :root{
   --bg:#060916;--card:#0f1424;--panel2:#171d31;--ink:#e9eff6;--muted:#9cacc1;--line:#2d3655;
@@ -146,136 +146,131 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 @media (max-width:520px){.tool{gap:8px;padding:10px;min-height:72px}.tool b{font-size:.82rem;letter-spacing:.05em}.tool small{font-size:.76rem}}
 @media (max-width:520px){.tools{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:22px}.tool{grid-column:auto!important;flex-direction:column;justify-content:center;gap:4px;min-height:60px;padding:8px 2px;text-align:center}.tool svg{width:20px;height:20px}.tool small{display:none}.tool b{font-size:.62rem;letter-spacing:.02em;line-height:1.2}}
 
-/* bpm finder */
-.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
-.panel{border:1px solid var(--line);background:rgba(4,6,15,.6);padding:14px 16px}
-.panel h2{margin-bottom:6px}
-.big{margin:0;font:700 clamp(2.2rem,8vw,3.2rem)/1.1 var(--mono);color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.02em;text-shadow:0 0 18px rgba(0,197,211,.35);overflow-wrap:anywhere}
-.big span{font-size:.4em;color:var(--muted);letter-spacing:.1em}
-.conf{margin:8px 0 10px;padding-left:10px;border-left:3px solid var(--muted);font-size:.9rem;color:#c9d3e1}
-.conf[data-level=strong]{border-color:var(--accent)}
-.conf[data-level=moderate]{border-color:var(--accent2)}
-.conf[data-level=weak]{border-color:#ff4d6d}
-.choice{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
-.choice .btn[aria-checked=true]{color:var(--ink);background:rgba(254,120,2,.16);box-shadow:inset 0 0 0 2px var(--accent2)}
-.warn{margin:12px 0 0;padding:10px 12px;border:1px solid rgba(254,120,2,.55);background:rgba(254,120,2,.08);color:var(--ink);font-size:.9rem}
-.tapcard{margin-top:22px}
-#tap{min-height:96px;width:100%;font-size:1.1rem;touch-action:manipulation;user-select:none}
-.tapread{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin:12px 0 0}
+/* wav to mp3 */
+[hidden]{display:none!important}
+.lock{font-size:1.02rem;padding:12px 16px}
+#list{margin-top:18px}
+#files{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+#files li{display:grid;grid-template-columns:minmax(0,1.3fr) auto;gap:8px 14px;align-items:center;padding:10px 12px;border:1px solid var(--line);background:rgba(4,6,15,.6)}
+.fname b{display:block;font:700 .92rem/1.35 var(--mono);overflow-wrap:anywhere}
+.fname .dur{color:var(--muted);font:600 .8rem/1.4 var(--mono);font-variant-numeric:tabular-nums}
+.trim{display:flex;flex-wrap:wrap;gap:8px}
+.trim label{display:flex;flex-direction:column;font:700 .72rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.trim input{width:96px;margin-top:4px}
+.st{grid-column:1 / 2;margin:0;font:600 .82rem/1.4 var(--mono);color:var(--muted);min-height:1.2em}
+.st[data-state=done]{color:var(--accent)}
+.st[data-state=error]{color:#ff6b81}
+.st[data-state=working]{color:var(--accent2)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+a.btn{text-decoration:none}
+@media (max-width:620px){#files li{grid-template-columns:minmax(0,1fr)}.st{grid-column:auto}.acts{justify-content:flex-start}}
 </style>
 </head>
 <body>
 <main>
-  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="./" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" href="../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav>
-  <h1>BPM Finder</h1>
-  <p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything runs in your browser. Your file is never uploaded to any server.</span></p>
-  <p class="facts">No sign-up · Unlimited songs</p>
+  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" href="./" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav>
+  <h1>WAV to MP3</h1>
+  <p class="privacy lock"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Your files never leave your browser. Nothing is uploaded to any server.</span></p>
+  <p class="facts">No sign-up · No account needed to download · No limit on the number of conversions</p>
 
   <div class="card">
     <label id="drop">
-      <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm">
+      <input id="file" type="file" multiple accept=".wav,audio/wav,audio/x-wav,audio/wave,audio/vnd.wave">
       <span>
-        <strong>Drop a song to find its BPM and key</strong>
-        <span class="hint">MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them.</span><br>
-        <span class="btn">Choose audio file</span>
+        <strong>Drop WAV files to convert to MP3</strong>
+        <span class="hint">You can add several WAV files at once.</span><br>
+        <span class="btn">Choose WAV files</span>
       </span>
     </label>
-    <p id="status" role="status" aria-live="polite"></p>
 
-    <div id="result" hidden>
-      <p id="filename"></p>
-      <div class="res">
-        <div class="panel">
-          <h2>Tempo</h2>
-          <p id="tooShort" class="conf" data-level="weak" hidden>This file is too short to measure a tempo. Use at least 7 seconds of audio.</p>
-          <div id="tempoBody">
-            <p class="big"><output id="bpm">—</output> <span>BPM</span></p>
-            <p id="tempoConf" class="conf"></p>
-            <p class="sub" style="margin:0">Half or double time? The same beat can be counted both ways. Pick the reading that matches how you count it:</p>
-            <div class="choice" role="radiogroup" aria-label="Tempo reading">
-              <button id="optA" class="btn ghost small" type="button" role="radio" aria-checked="true"></button>
-              <button id="optB" class="btn ghost small" type="button" role="radio" aria-checked="false"></button>
-            </div>
-            <div class="row" style="margin-top:10px"><button id="clicks" class="btn" type="button">▶ Play with clicks</button><span class="sub">Plays your song with a click on every beat of the reading you picked.</span></div>
-            <p id="others" class="sub" style="margin:10px 0 0"></p>
-            <p id="varies" class="warn" hidden></p>
-          </div>
-        </div>
-        <div class="panel">
-          <h2>Key</h2>
-          <p class="big"><output id="key">—</output></p>
-          <p id="keyConf" class="conf"></p>
-          <p id="keyOthers" class="sub" style="margin:0"></p>
-        </div>
+    <div class="grid">
+      <div class="field">
+        <label for="format">Output format</label>
+        <select id="format">
+          <option value="mp3">MP3</option>
+          <option value="wav">WAV (16-bit PCM)</option>
+        </select>
       </div>
+      <div class="field">
+        <label for="bitrate">MP3 bitrate</label>
+        <select id="bitrate">
+          <option value="192" selected>192 kbps</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="rate">Sample rate</label>
+        <select id="rate">
+          <option value="16000">16 kHz</option>
+          <option value="22050">22.05 kHz</option>
+          <option value="24000">24 kHz</option>
+          <option value="32000">32 kHz</option>
+          <option value="44100" selected>44.1 kHz</option>
+          <option value="48000">48 kHz</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="channels">Channels</label>
+        <select id="channels">
+          <option value="same" selected>Same as file</option>
+          <option value="mono">Mono</option>
+          <option value="stereo">Stereo</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="volume">Volume <output id="volumeV">100%</output></label>
+        <input id="volume" type="range" min="10" max="200" step="5" value="100">
+        <p id="volNote"></p>
+      </div>
+    </div>
+
+    <div id="list" hidden>
+      <h2 style="margin-top:20px">Files</h2>
+      <p class="sub" style="margin:0">Settings apply to every file. Set start and end to keep only part of a file.</p>
+      <ul id="files"></ul>
+      <div class="row"><button id="all" class="btn" type="button" disabled>Convert</button></div>
     </div>
   </div>
 
   <aside style="margin:16px 0 0;padding:12px 14px;border:1px dashed var(--line);color:#c9d3e1;font-size:.92rem">
-    Found the tempo and key and want to practice or remix? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can split a song into vocals, drums, bass, piano and other stems.
+    Turning a song into an MP3 and want the vocals or the music on their own? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can remove vocals or instrumentals from a song with AI.
     <small style="display:block;margin-top:6px;color:var(--muted)">Affiliate link: I may earn a commission if you buy. LALAL.AI works on files you upload to it, unlike the tools on this site.</small>
   </aside>
 
-  <div class="card tapcard">
-    <h2>Tap tempo</h2>
-    <p class="sub" style="margin:0 0 12px">No file? Tap along with the beat. You can also press the T key.</p>
-    <button id="tap" class="btn" type="button">Tap</button>
-    <div class="tapread">
-      <p class="big" style="margin:0"><output id="tapBpm">—</output> <span>BPM</span></p>
-      <span class="sub" id="tapCount">0 taps</span>
-      <button id="tapReset" class="btn ghost small" type="button">Reset</button>
-    </div>
-    <p class="sub" id="tapAlt" style="margin:6px 0 0"></p>
-  </div>
-
   <section>
-    <h2>How to use the BPM key finder</h2>
+    <h2>How to convert WAV to MP3</h2>
     <ol>
-      <li>Drop a song into the box above or tap <em>Choose audio file</em>.</li>
-      <li>Wait a few seconds while your browser works out the tempo and key. Longer songs take longer.</li>
-      <li>If the tempo feels twice too fast or too slow, pick the other reading.</li>
-      <li>Press <em>Play with clicks</em> and listen. If the clicks sit on the beat, the reading fits.</li>
-      <li>No file? Use <em>Tap tempo</em> and tap along while the song plays.</li>
+      <li>Drop one or more WAV files into the box above, or tap <em>Choose WAV files</em>.</li>
+      <li>Pick a bitrate, a sample rate and mono or stereo. Change the volume if the file is too quiet or too loud.</li>
+      <li>To keep only part of a file, type a start and end time in seconds.</li>
+      <li>Press <em>Convert</em>, then <em>Download</em> next to each file.</li>
     </ol>
   </section>
 
   <section>
-    <h2>When the result can be wrong</h2>
-    <p>Both numbers are estimates worked out from the sound. These are the cases we saw go wrong or become unclear while testing:</p>
-    <h3>Half time and double time</h3>
-    <p>A beat at 70 BPM with busy hi-hats can also be counted as 140 BPM, and a 174 BPM drum and bass loop can read as 87. The finder can't know how you count, so it always shows both readings and lets you choose.</p>
-    <h3>Songs that speed up or slow down</h3>
-    <p>One number can't describe a song whose tempo changes. For files of 40 seconds or longer, the finder also checks 20-second sections, and if they disagree by more than 4% it shows the range it found.</p>
-    <h3>Music without a steady beat</h3>
-    <p>Sustained pads with no drums gave a weak tempo reading. When the confidence says <em>Weak</em>, don't rely on the number.</p>
-    <h3>Tracks with few pitched notes</h3>
-    <p>Drum-only tracks and noise don't have a key, so the finder says so instead of guessing.</p>
-    <h3>Major or its relative minor</h3>
-    <p>C major and A minor use the same notes, so they are easy to mix up. The next closest keys are listed under the result. The finder gives one key for the whole file, even if the song changes key.</p>
-  </section>
-
-  <section>
-    <h2>BPM and key finder FAQ</h2>
-    <h3>Is my song uploaded?</h3>
-    <p>No. Your browser decodes and analyzes the file on your device. The only files your browser downloads are this page and its two scripts, both from this site.</p>
-    <h3>Can I use it as a song key finder only?</h3>
-    <p>Yes. Every file gets a key reading next to the tempo, as a major or minor key, for example A minor or F♯ major.</p>
-    <h3>What does the confidence line mean?</h3>
-    <p>For tempo, it describes how much the best tempo stands out from other tempos in the same file. For key, it describes how well the notes match the key and how far ahead it is of the next closest key. It is not a chance of being right.</p>
-    <h3>How was it tested?</h3>
-    <p>With test tracks we made at known tempos and keys: a click track, drum loops, a tempo change, chord progressions, sustained pads and noise. It has not been checked against a large collection of real recordings, so use <em>Play with clicks</em> to check the result by ear.</p>
-    <h3>How does tap tempo work?</h3>
-    <p>It divides the time from your first tap to your last by the number of beats in between. Tap for longer to even out small timing errors. A pause of more than 2.5 seconds starts a new count.</p>
-    <h3>Is there a file size or length limit?</h3>
-    <p>This page sets none. The decoded song is kept in memory while you listen, so very long files need more memory and the practical limit depends on your device.</p>
+    <h2>WAV to MP3 converter FAQ</h2>
+    <h3>Are my files uploaded?</h3>
+    <p>No. Your browser reads the WAV and encodes the MP3 on your device. The only files your browser downloads are this page and its three scripts, all from this site.</p>
+    <h3>Do I need an account to download?</h3>
+    <p>No. There is no sign-up or login on this site. The download button saves the converted file straight from your browser.</p>
+    <h3>Which bitrates, sample rates and channels can I choose?</h3>
+    <p>Sample rates of 16, 22.05, 24, 32, 44.1 and 48 kHz. The bitrate list changes with the sample rate and channels, and only shows bitrates that the encoder produced exactly in our tests: 128 to 320 kbps at 44.1 and 48 kHz, 96 to 320 kbps at 32 kHz, and up to 160 kbps at 24 kHz and below. Choosing mono adds lower bitrates at every sample rate except 16 kHz. For channels, <em>Same as file</em> keeps mono as mono and stereo as stereo, <em>Mono</em> mixes left and right together, and <em>Stereo</em> copies a mono file to both sides. Files with more than two channels are mixed down to stereo.</p>
+    <h3>Which WAV files work?</h3>
+    <p>WAV files with 8, 16, 24 or 32-bit PCM, 32-bit float, A-law or μ-law audio, in mono, stereo or 5.1, and RF64 files. We tested sample rates from 8 kHz to 384 kHz. In the Chromium browser we tested with, WAV files with 64-bit float, ADPCM (IMA or Microsoft) or GSM audio did not decode. When a file doesn't decode, the page tells you, and names the format if it can read it from the file.</p>
+    <h3>Does converting WAV to MP3 lose quality?</h3>
+    <p>Yes. WAV is uncompressed and MP3 is lossy, so the encoder removes detail to make the file smaller. A higher bitrate keeps more detail and gives a larger file. Lowering the sample rate also cuts the highest frequencies.</p>
+    <h3>Are tags and cover art kept?</h3>
+    <p>No. The MP3 contains the audio only. Title, artist and other information stored in the WAV are not copied.</p>
+    <h3>Why is the MP3 a little longer than the WAV?</h3>
+    <p>MP3 encoding adds a little silence to fill whole frames, so the MP3 came out 0.03 to 0.08 seconds longer than the WAV in our tests. WAV output matched the original length to within one sample in our tests.</p>
+    <h3>Is there a limit on file size or number of files?</h3>
+    <p id="limitFaq">This page sets none, but your device's memory and time do. The page reads a PCM WAV 30 seconds at a time, so the whole WAV is never held in memory at once. The converted file is held in memory until you download it. On our test computer, with the browser limited to 2.5 GB of memory, a 2-hour WAV (1.27 GB) converted to MP3 in about 11 minutes, and a 1-hour 96 kHz 24-bit WAV (2.07 GB) converted in about 6 minutes. Choosing WAV output needs much more memory: 1 hour of 44.1 kHz stereo comes out at over 600 MB. We haven't tested WAV files larger than 2.07 GB. Files are converted one after another.</p>
   </section>
 
   <footer>
-    Tempo and key are calculated by this page's own code in your browser.<br>
+    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="../LICENSE-lamejs.txt">LGPL 3.0</a>.<br>
     <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
   </footer>
 </main>
-<script src="analyze.js"></script>
-<script src="bpm.js"></script>
+<script src="convert.js"></script>
 </body>
 </html>

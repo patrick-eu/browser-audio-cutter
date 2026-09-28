@@ -236,6 +236,7 @@ async function route(request, env) {
   const url = new URL(request.url), path = url.pathname, method = request.method;
   const page = PAGES.get(path);
   if (page) return servePage(request, env, page);
+  if (path.startsWith('/media/') && (method === 'GET' || method === 'HEAD')) return serveMedia(request, env);
 
   if (path === '/mcp' || path === '/mcp/') return handleMcp(request);
   if (path.startsWith('/agent-auth/') || path === '/agent-auth') return new Response(JSON.stringify(UNAVAILABLE, null, 1) + '\n', { status: 503, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Retry-After': '86400', 'X-Robots-Tag': 'noindex', ...CORS } });
@@ -276,6 +277,22 @@ async function route(request, env) {
   }
   if (res) return headOnly(request, res);
   return env.ASSETS.fetch(request);
+}
+
+// Static assets answer a Range request with the whole file, and Safari will not play a video without 206 responses.
+// /media/ files (the demo video, a few MB) are sliced here.
+async function serveMedia(request, env) {
+  const res = await env.ASSETS.fetch(new Request(request.url, { method: 'GET' }));
+  if (!res.ok) return res;
+  const buf = await res.arrayBuffer(), size = buf.byteLength, h = new Headers(res.headers);
+  h.delete('Content-Encoding'); h.set('Accept-Ranges', 'bytes'); h.set('Cache-Control', 'public, max-age=86400');
+  const head = request.method === 'HEAD', m = /^bytes=(\d*)-(\d*)$/.exec((request.headers.get('Range') || '').trim());
+  if (!m || (m[1] === '' && m[2] === '')) { h.set('Content-Length', String(size)); return new Response(head ? null : buf, { status: 200, headers: h }); }
+  const start = m[1] === '' ? Math.max(0, size - Number(m[2])) : Number(m[1]);
+  const end = m[1] === '' || m[2] === '' ? size - 1 : Math.min(Number(m[2]), size - 1);
+  if (start >= size || start > end) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${size}`, 'Accept-Ranges': 'bytes' } });
+  h.set('Content-Range', `bytes ${start}-${end}/${size}`); h.set('Content-Length', String(end - start + 1));
+  return new Response(head ? null : buf.slice(start, end + 1), { status: 206, headers: h });
 }
 
 export default {

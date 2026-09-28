@@ -10,7 +10,7 @@
     "directory": "../web",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
-    "run_worker_first": ["/", "/audio-joiner/", "/bpm-finder/", "/m4a-to-mp3/", "/mp3-to-wav/", "/wav-to-mp3/", "/about/", "/privacy/", "/contact/"]
+    "run_worker_first": ["/", "/audio-joiner/", "/bpm-finder/", "/m4a-to-mp3/", "/mp3-to-wav/", "/wav-to-mp3/", "/about/", "/privacy/", "/contact/", "/media/*"]
   },
   "observability": { "enabled": false },
   "workers_dev": true,

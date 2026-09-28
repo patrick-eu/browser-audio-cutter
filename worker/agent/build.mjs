@@ -78,7 +78,7 @@ try {
       // sections: h2 blocks with their h3 subsections and paragraphs, for help entries
       const sections = [];
       let h2 = null, h3 = null;
-      for (const n of main.querySelectorAll('h2, h3, section > p, section > ol, section > ul')) {
+      for (const n of main.querySelectorAll('h2, h3, section > p, section > ol, section > ul, details > p, details > ol, details > ul')) {
         if (n.closest('.card') || !visible(n)) continue;
         if (n.tagName === 'H2') { h2 = { heading: clean(n.textContent), text: [], sub: [] }; h3 = null; sections.push(h2); }
         else if (n.tagName === 'H3' && h2) { const link = n.querySelector('a'); h3 = { heading: clean(n.textContent), text: link ? [`Page: ${abs(link.getAttribute('href'))}`] : [] }; h2.sub.push(h3); }

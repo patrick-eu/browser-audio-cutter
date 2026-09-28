@@ -28,7 +28,7 @@
         const words = String(query).toLowerCase().match(/[a-z0-9]+/g) || [];
         const hits = [];
         for (const h of document.querySelectorAll('main section h3')) {
-          let answer = '', n = h.nextElementSibling;
+          let answer = '', n = (h.closest('summary') || h).nextElementSibling; // FAQ answers sit after the <summary> of a <details>
           while (n && !/^H[23]$/.test(n.tagName)) { answer += (answer ? ' ' : '') + n.textContent.trim(); n = n.nextElementSibling; }
           const hay = (h.textContent + ' ' + answer).toLowerCase(), score = words.filter(w => hay.includes(w)).length;
           if (score) hits.push({ score, question: h.textContent.trim(), answer, source_url: ORIGIN + location.pathname });

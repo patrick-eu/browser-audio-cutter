@@ -281,8 +281,9 @@ footer.site{margin:88px 0 24px;padding:40px 40px 26px;background:#fff;border:1px
   footer.site{padding:28px 20px 20px;border-radius:22px}
 }
 </style>
-<title>Contact – SnipAudio</title>
-<meta name="description" content="How to contact the maker of snipaudio.com.">
+<title>Trim MP3 to the Millisecond? We Tested Where the Cut Lands</title>
+<meta name="description" content="We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.">
+<link rel="canonical" href="https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/">
 <!-- Google Analytics 4: page visits only; audio files never leave the browser -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFZKY4K212"></script>
 <script>
@@ -295,49 +296,131 @@ gtag('js',new Date());gtag('config','G-VFZKY4K212');
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="canonical" href="https://snipaudio.com/contact/">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:site_name" content="SnipAudio">
-<meta property="og:title" content="Contact – SnipAudio">
-<meta property="og:description" content="How to contact the maker of snipaudio.com.">
-<meta property="og:url" content="https://snipaudio.com/contact/">
+<meta property="og:title" content="Trim MP3 to the Millisecond? We Tested Where the Cut Lands">
+<meta property="og:description" content="We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.">
+<meta property="og:url" content="https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/">
 <meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Can you trim an MP3 to the exact millisecond?", "description": "We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.", "url": "https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/", "mainEntityOfPage": "https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "en", "author": {"@type": "Person", "name": "patrick-eu", "url": "https://snipaudio.com/about/"}, "publisher": {"@type": "Organization", "name": "SnipAudio", "url": "https://snipaudio.com/", "logo": "https://snipaudio.com/icon-512.png"}}</script>
 <!--/meta-->
 </head>
 <body>
-<!--hdr--><header class="top"><div class="bar"><a class="brand" href="../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a><nav class="menu" aria-label="Site"><details class="dd"><summary>Tools</summary><div class="ddp"><a href="../">Audio Cutter<small>Cut part of one file</small></a><a href="../audio-joiner/">Audio Joiner<small>Merge several files into one</small></a><a href="../bpm-finder/">BPM Finder<small>Find the tempo and key of a song</small></a><a href="../m4a-to-mp3/">M4A to MP3<small>Convert M4A files to MP3</small></a><a href="../mp3-to-wav/">MP3 to WAV<small>Convert MP3 files to WAV</small></a><a href="../wav-to-mp3/">WAV to MP3<small>Convert WAV files to MP3</small></a></div></details><a href="../guides/">Guides</a><a class="wide" href="../about/">About</a></nav><a class="btn cta" href="../">Cut audio</a></div></header><script>document.addEventListener('click',e=>{for(const d of document.querySelectorAll('details.dd[open]'))if(!d.contains(e.target))d.open=false});</script><!--/hdr-->
+<!--hdr--><header class="top"><div class="bar"><a class="brand" href="../../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a><nav class="menu" aria-label="Site"><details class="dd"><summary>Tools</summary><div class="ddp"><a href="../../">Audio Cutter<small>Cut part of one file</small></a><a href="../../audio-joiner/">Audio Joiner<small>Merge several files into one</small></a><a href="../../bpm-finder/">BPM Finder<small>Find the tempo and key of a song</small></a><a href="../../m4a-to-mp3/">M4A to MP3<small>Convert M4A files to MP3</small></a><a href="../../mp3-to-wav/">MP3 to WAV<small>Convert MP3 files to WAV</small></a><a href="../../wav-to-mp3/">WAV to MP3<small>Convert WAV files to MP3</small></a></div></details><a href="../../guides/">Guides</a><a class="wide" href="../../about/">About</a></nav><a class="btn cta" href="../../">Cut audio</a></div></header><script>document.addEventListener('click',e=>{for(const d of document.querySelectorAll('details.dd[open]'))if(!d.contains(e.target))d.open=false});</script><!--/hdr-->
 <main class="doc">
-  <h1>Contact</h1>
-  <section style="margin-top:0">
-    <p>Email <a href="mailto:hello@snipaudio.com">hello@snipaudio.com</a>.</p>
-    <p>If a tool isn't working for you, it helps to say which tool you used, your browser and device, and the file type, for example MP3 or WAV.</p>
-    <p>The tools never upload your files, so I can't see what you opened. Only attach a file if you're happy to share it.</p>
+  <h1>Can you trim an MP3 to the exact millisecond?</h1>
+  <p class="meta">Published 2026-09-28 · by patrick-eu</p>
+  <div class="answer" data-own>
+    <p><b>Short answer:</b> yes, if you type the times and export WAV. We typed start and end times into this site's <a href="../../">audio cutter</a> and read back which samples each clip contained. In all 12 cuts on a 44.1 kHz WAV (10 typed, 2 dragged, on a desktop and a phone-sized screen), the clip started on exactly the sample we expected, <b>0 samples off</b>, and had exactly the expected length.</p>
+    <p>Two things moved a trim by <b>1,105 samples (25.1 ms at 44.1 kHz)</b> in our tests:</p>
+    <ul>
+      <li><b>Exporting MP3.</b> The MP3 encoder puts 25.1 ms of silence in front of the clip, so everything plays 25.1 ms late.</li>
+      <li><b>Opening an MP3 that has no LAME header</b>, such as an MP3 saved by this cutter. Chrome's decoder keeps the encoder's silence at the start, so the cut lands 25.1 ms <i>earlier</i> in the music than the time you typed. An MP3 with the header was trimmed correctly.</li>
+    </ul>
+    <p>To trim an MP3 precisely: open the <a href="../../">audio cutter</a>, type the times in the <b>Start</b> and <b>End</b> boxes instead of dragging, choose <b>WAV (16-bit PCM)</b> under Export format, and cut from your original file.</p>
+  </div>
+
+  <section>
+    <h2>What "precise" means for an audio file</h2>
+    <p>Digital audio is a row of samples. At 44.1 kHz there are 44,100 per second, so one sample lasts about 0.023 ms. A trimmer turns the time you choose into a sample number and keeps the samples between the two numbers.</p>
+    <p>On this site the time boxes take milliseconds. One millisecond is 44.1 samples, so a typed time can land on roughly every 44th sample, and the cut starts on the sample nearest that time. Anything past three decimals is rounded: we typed 7.0005 and the box changed it to 7.001.</p>
+    <p>Precision can go wrong in three places: the time you set may not be the time used, the tool may read your file with a shift, and the saved file may add something of its own. We tested each one.</p>
   </section>
 
-  <!--more--><div class="more"><h2>Continue with the next audio task</h2><nav class="tools" aria-label="Audio tools"><a class="tool" data-tag="Task" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" data-tag="Task" href="../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" data-tag="Analyze" href="../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" data-tag="Convert" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" data-tag="Convert" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" data-tag="Convert" href="../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav></div><!--/more-->
+  <section data-own>
+    <h2>How we tested</h2>
+    <ul>
+      <li><b>Real tool, real browser.</b> Playwright drove Chromium 153 on a local copy of this site's cutter page, once with a desktop window and once with a Pixel 5 phone profile. It opened each file, typed times into the Start and End boxes, pressed Download and saved what came out. Firefox and Safari were not tested.</li>
+      <li><b>A file where every sample carries its own number.</b> We built a 60 s, 44.1 kHz, 16-bit stereo WAV whose left and right values together spell out each sample's position. Any clip cut from it tells you exactly which samples it kept, even after the ±1 rounding the tool applies. The idea of marking the audio so you can see which samples a selection really holds comes from a proposal page on the old Audacity Wiki (<a href="https://web.archive.org/web/20221112175715/https://wiki.audacityteam.org/wiki/Proposal_Displaying_Samples" rel="noopener">archived snapshot of 2022-11-12</a>). We ran our own version of it on our own tool.</li>
+      <li><b>A file with clicks at known times.</b> For MP3s and a 48 kHz file, where sample numbers do not survive, we used 60 s of silence with short noise bursts at known times (1.0000 s, 3.0003 s, 5.0006 s and so on). We found each burst in the output by cross-correlation and compared where it was with where it should be if the cut began exactly at the typed time.</li>
+      <li><b>MP3 sources:</b> the same click file encoded at 128 kbps two ways: by this site's own MP3 encoder (lamejs), which writes no LAME header, and by FFmpeg 4.4.2 with libmp3lame, which does. FFprobe reports a start time of 0.000000 s for the first and 0.025057 s for the second.</li>
+      <li><b>MP3 exports</b> were decoded twice, with FFmpeg 4.4.2 and with Chromium's own decoder (the one browsers use for playback). Both gave the same results.</li>
+    </ul>
+  </section>
+
+  <section data-own>
+    <h2>Typed times on a WAV: which samples came out</h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>You type</th><th>Box shows</th><th>First sample expected</th><th>First sample in clip</th><th>Length expected</th><th>Length in clip</th></tr></thead>
+      <tbody>
+        <tr><td>12.345 to 16.789</td><td>12.345 / 16.789</td><td>544,415</td><td>544,415</td><td>195,980</td><td>195,980</td></tr>
+        <tr><td>0.001 to 0.5</td><td>0.001 / 0.500</td><td>44</td><td>44</td><td>22,006</td><td>22,006</td></tr>
+        <tr><td>7.0005 to 9</td><td>7.001 / 9.000</td><td>308,744</td><td>308,744</td><td>88,156</td><td>88,156</td></tr>
+        <tr><td>33.3333 to 35</td><td>33.333 / 35.000</td><td>1,469,985</td><td>1,469,985</td><td>73,515</td><td>73,515</td></tr>
+        <tr><td>59.5 to 60 (file end)</td><td>59.500 / 60.000</td><td>2,623,950</td><td>2,623,950</td><td>22,050</td><td>22,050</td></tr>
+        <tr><td>Drag, desktop</td><td>22.494 / 40.000</td><td>991,985</td><td>991,985</td><td>772,015</td><td>772,015</td></tr>
+        <tr><td>Drag, phone size</td><td>26.707 / 40.000</td><td>1,177,779</td><td>1,177,779</td><td>586,221</td><td>586,221</td></tr>
+      </tbody>
+      <caption>Measured by snipaudio.com, 2026-09-28, Chromium, WAV export. Expected = the time in the box × 44,100, rounded. Typed rows gave identical results on the desktop and phone profiles. In every clip the samples ran on without a gap and no value changed by more than 1 step of 16-bit rounding.</caption>
+    </table></div>
+    <p>The last row of typed cuts ended on sample 2,645,999, the final sample of the file, so trimming to the very end loses nothing.</p>
+    <p>Dragging a handle was just as exact about the time it showed, but you cannot choose that time finely. With a 60 s file, one pixel of the waveform was 67 ms on our 890-pixel desktop waveform and 181 ms on the 331-pixel phone waveform. Drag to get close, then type the exact value.</p>
+  </section>
+
+  <section data-own>
+    <h2>MP3 in, MP3 out: where the 25 ms shifts come from</h2>
+    <p>Same cut (12.345 s to 18.345 s) on the click file in four versions. A positive number means the sound in the clip sits later than it should, measured in samples at 44.1 kHz.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Source file</th><th>Export WAV</th><th>Export MP3 128 kbps</th></tr></thead>
+      <tbody>
+        <tr><td>WAV, 44.1 kHz</td><td>0.01</td><td>1,105</td></tr>
+        <tr><td>WAV, 48 kHz</td><td>0.01</td><td>1,105</td></tr>
+        <tr><td>MP3 with LAME header (FFmpeg)</td><td>0.01</td><td>1,104.98</td></tr>
+        <tr><td>MP3 without LAME header (this site's encoder)</td><td>1,104.98</td><td>2,210</td></tr>
+        <tr><td>Same, both times typed 0.025 s later</td><td>2.98</td><td>not tested</td></tr>
+      </tbody>
+      <caption>Measured by snipaudio.com, 2026-09-28. Average of the 3 clicks inside each clip, in samples. 1,105 samples = 25.1 ms and 2,210 samples = 50.1 ms at 44.1 kHz. The MP3 with a LAME header gave the same numbers on the phone profile.</caption>
+    </table></div>
+    <p><b>The 48 kHz file</b> was converted to 44.1 kHz when the page opened it, and the cut still landed within 0.01 samples of the typed time. A different sample rate did not cost any precision.</p>
+    <p><b>MP3 export</b> added 1,105 samples of silence at the start every time, whatever the source. The MP3 clip was also 1,512 samples longer than the 264,600 we asked for. The same 1,105-sample delay showed up in our <a href="../does-cutting-mp3-lose-quality/">test of MP3 quality loss</a>, where it built up with every re-cut.</p>
+    <p><b>The MP3 without a LAME header</b> was opened with the encoder's 1,105 samples still at the front: Chromium decoded it as 2,647,296 samples instead of 2,646,000. Every position in the file was pushed 25.1 ms back, so a cut typed at 12.345 s started at 12.320 s of music. The MP3 with a header was opened at exactly 2,646,000 samples and cut correctly. Exporting the headerless file as MP3 stacked both shifts to 2,210 samples.</p>
+    <p>Typing both times 0.025 s later fixed the headerless MP3 to within 2.98 samples (under 0.1 ms). It works because the shift is a fixed 1,105 samples, the same in every clip we measured.</p>
+  </section>
+
+  <section>
+    <h2>How to trim an MP3 to the exact point</h2>
+    <ol>
+      <li><b>Start from the original file</b>, not from a clip you already cut and saved as MP3. Clips saved as MP3 by this cutter are the headerless kind.</li>
+      <li><b>Find the spot by ear</b> with <b>Play region</b>, drag the handles close, then <b>type the final times</b> in the Start and End boxes. Three decimals is the finest step.</li>
+      <li><b>Export WAV</b> when the exact start matters, for example for a clip that has to line up with something else. Nothing is added before or after the samples you chose.</li>
+      <li><b>If you need an MP3 file</b>, expect 25.1 ms of silence at its start. That is fine for a ringtone or a clip to share. If you must cut from a headerless MP3, type both times 0.025 s later.</li>
+    </ol>
+  </section>
+
+  <section data-own>
+    <h2>Questions</h2>
+    <h3>How do I know if my MP3 has a LAME header?</h3>
+    <p>Run <code>ffprobe yourfile.mp3</code> and look at <code>start:</code> in the Duration line. In our test the file with a header showed <code>start: 0.025057</code> and the one without showed <code>start: 0.000000</code>.</p>
+    <h3>Is trimming less precise on a phone?</h3>
+    <p>Not when you type the times. The phone-size profile kept exactly the same samples as the desktop in every typed cut. Dragging is coarser because the waveform is narrower: 181 ms per pixel against 67 ms on desktop for a 60 s file.</p>
+    <h3>Does a 48 kHz file lose precision?</h3>
+    <p>No. The cutter converts it to 44.1 kHz and cuts on that grid. In our test the cut was 0.01 samples from the typed time, the same as for a 44.1 kHz file.</p>
+  </section>
+
+  <!--more--><div class="more"><h2>Continue with the next audio task</h2><nav class="tools" aria-label="Audio tools"><a class="tool" data-tag="Task" href="../../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" data-tag="Task" href="../../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" data-tag="Analyze" href="../../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" data-tag="Convert" href="../../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" data-tag="Convert" href="../../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" data-tag="Convert" href="../../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav></div><!--/more-->
 
   <!--ftr--><footer class="site"><div class="fgrid">
-<div><a class="brand" href="../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a>
+<div><a class="brand" href="../../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a>
 <p>Free audio tools that run in your browser. Your files never leave your device.</p>
 <p><a href="mailto:hello@snipaudio.com">hello@snipaudio.com</a></p></div>
 <div><b>Tools</b><ul>
-<li><a href="../">Audio Cutter</a></li>
-<li><a href="../audio-joiner/">Audio Joiner</a></li>
-<li><a href="../bpm-finder/">BPM Finder</a></li>
-<li><a href="../m4a-to-mp3/">M4A to MP3</a></li>
-<li><a href="../mp3-to-wav/">MP3 to WAV</a></li>
-<li><a href="../wav-to-mp3/">WAV to MP3</a></li>
+<li><a href="../../">Audio Cutter</a></li>
+<li><a href="../../audio-joiner/">Audio Joiner</a></li>
+<li><a href="../../bpm-finder/">BPM Finder</a></li>
+<li><a href="../../m4a-to-mp3/">M4A to MP3</a></li>
+<li><a href="../../mp3-to-wav/">MP3 to WAV</a></li>
+<li><a href="../../wav-to-mp3/">WAV to MP3</a></li>
 </ul></div>
 <div><b>Guides</b><ul>
-<li><a href="../guides/does-online-mp3-cutter-upload-your-file/">Does an online MP3 cutter upload your file?</a></li>
-<li><a href="../guides/does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a></li>
-<li><a href="../guides/can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a></li>
-<li><a href="../guides/">All guides</a></li>
+<li><a href="../../guides/does-online-mp3-cutter-upload-your-file/">Does an online MP3 cutter upload your file?</a></li>
+<li><a href="../../guides/does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a></li>
+<li><a href="../../guides/can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a></li>
+<li><a href="../../guides/">All guides</a></li>
 </ul></div>
 <div><b>Site</b><ul>
-<li><a href="../about/">About</a></li>
-<li><a href="../privacy/">Privacy</a></li>
-<li><a href="../contact/">Contact</a></li>
+<li><a href="../../about/">About</a></li>
+<li><a href="../../privacy/">Privacy</a></li>
+<li><a href="../../contact/">Contact</a></li>
 </ul></div>
 </div><div class="fnote">
 <p>© 2026 SnipAudio</p>

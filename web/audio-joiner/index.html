@@ -3,166 +3,324 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Audio Joiner – Merge Audio Files Online in Your Browser</title>
-<meta name="description" content="Online audio joiner: merge audio files into one track in your browser. Combine MP3 and WAV clips, drag them into order, add fades and crossfades, preview, then export MP3 or WAV. Your files are never uploaded.">
 <style>
 :root{
-  --bg:#060916;--card:#0f1424;--panel2:#171d31;--ink:#e9eff6;--muted:#9cacc1;--line:#2d3655;
-  --accent:#00c5d3;--accent-ink:#060916;--accent2:#fe7802;--ok:#00c5d3;
-  --wave:#5f7d9d;--fade:#fe7802;
-  --sel:rgba(0,197,211,.12);--sel-active:rgba(0,197,211,.26);
-  --laneA:rgba(0,197,211,.14);--laneB:rgba(254,120,2,.14);--xf:rgba(254,120,2,.24);
+  --bg:#f5f7fb;--card:#fff;--panel:#f3f6fa;--ink:#0c1526;--text:#3a4559;--muted:#5b667c;--line:#e2e7ef;
+  --accent:#0a7f8f;--accent-dark:#075f6b;--accent-ink:#fff;--accent-soft:#e2f3f5;--accent2:#e0641c;--ok:#0a7f8f;
+  --wave:#8494ad;--fade:#e0641c;
+  --sel:rgba(10,127,143,.10);--sel-active:rgba(10,127,143,.22);
+  --laneA:rgba(10,127,143,.12);--laneB:rgba(224,100,28,.12);--xf:rgba(224,100,28,.24);
   --mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,"Liberation Mono",monospace;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-  --cut:10px;
-  color-scheme:dark;
+  --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r:24px;--shadow:0 1px 2px rgba(12,21,38,.04),0 14px 36px -14px rgba(12,21,38,.16);
+  color-scheme:light;
 }
 *{box-sizing:border-box}
-html{background:var(--bg)}
-body{margin:0;color:var(--ink);font:16px/1.55 var(--sans);
-  background:
-    
-    repeating-linear-gradient(0deg,rgba(0,197,211,.045) 0 1px,transparent 1px 40px),
-    repeating-linear-gradient(90deg,rgba(0,197,211,.045) 0 1px,transparent 1px 40px),
-    radial-gradient(1200px 520px at 85% -10%,rgba(254,120,2,.10),transparent 60%),
-    radial-gradient(900px 480px at -10% 10%,rgba(0,197,211,.10),transparent 60%),
-    var(--bg);
-  min-height:100vh}
-body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;
-  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);mix-blend-mode:multiply;opacity:.35}
-main{max-width:960px;margin:0 auto;padding:40px 16px 56px;position:relative}
+[hidden]{display:none!important}
+html{background:var(--bg);scroll-padding-top:96px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{margin:0;color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;
+  background:radial-gradient(900px 520px at -5% -8%,rgba(10,127,143,.11),transparent 62%),radial-gradient(760px 440px at 105% 0%,rgba(224,100,28,.07),transparent 60%),var(--bg);background-repeat:no-repeat}
 a{color:var(--accent);text-underline-offset:3px}
-a:hover{color:var(--accent2)}
-h1{font-family:var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:.08em;
-  font-size:clamp(2rem,6vw,3.4rem);line-height:1.05;margin:0 0 14px;
-  text-shadow:0 0 18px rgba(0,197,211,.45),2px 0 0 rgba(254,120,2,.55)}
-h1::after{content:"";display:block;width:140px;height:4px;margin-top:14px;
-  background:linear-gradient(90deg,var(--accent) 0 70%,var(--accent2) 70% 100%);
-  clip-path:polygon(0 0,100% 0,calc(100% - 6px) 100%,0 100%)}
-.crumb{margin:0 0 18px;font:600 .85rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em}
-.lede{margin:0 0 12px;color:var(--ink);max-width:62ch}
-.privacy{display:flex;gap:10px;align-items:center;margin:0 0 10px;padding:10px 14px;width:fit-content;max-width:100%;
-  font:600 .95rem/1.4 var(--mono);color:var(--ok);background:rgba(0,197,211,.07);border:1px solid rgba(0,197,211,.35);
-  clip-path:polygon(0 0,calc(100% - var(--cut)) 0,100% var(--cut),100% 100%,0 100%)}
+a:hover{color:var(--accent-dark)}
+code{font-family:var(--mono);font-size:.9em;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:.05em .35em}
+em{font-style:normal;font-weight:700;color:var(--ink)}
+/* header */
+.top{position:sticky;top:10px;z-index:40;margin:10px 0 0;padding:0 12px}
+.bar{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:6px;height:64px;padding:0 10px 0 16px;
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.brand{display:inline-flex;align-items:center;gap:10px;min-height:44px;color:var(--ink);text-decoration:none;font-weight:800;font-size:1.12rem;letter-spacing:-.01em;margin-right:14px}
+.brand:hover{color:var(--ink)}
+.brand svg{flex:none}
+.menu{display:flex;align-items:center;gap:2px;margin-right:auto}
+.menu>a,.dd>summary{display:flex;align-items:center;min-height:44px;padding:0 12px;border-radius:12px;color:#334058;font-weight:600;font-size:.95rem;text-decoration:none;cursor:pointer;list-style:none;white-space:nowrap}
+.menu>a:hover,.dd>summary:hover,.dd[open]>summary{background:var(--panel);color:var(--ink)}
+.dd{position:relative}
+.dd>summary::-webkit-details-marker{display:none}
+.dd>summary::after{content:"";width:7px;height:7px;margin:-4px 0 0 9px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.dd[open]>summary::after{transform:rotate(-135deg);margin-top:4px}
+.ddp{position:absolute;top:calc(100% + 12px);left:0;width:320px;padding:8px;display:grid;gap:2px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.ddp a{display:block;padding:10px 12px;border-radius:10px;color:var(--ink);text-decoration:none;font-weight:700;font-size:.95rem}
+.ddp a small{display:block;color:var(--muted);font-weight:500;font-size:.84rem}
+.ddp a:hover,.ddp a[aria-current]{background:var(--accent-soft)}
+.bar .cta{min-height:44px;padding:10px 18px}
+@media (max-width:720px){.bar .cta,.menu .wide{display:none}.brand{margin-right:4px}.ddp{position:fixed;top:84px;left:12px;right:12px;width:auto}}
+/* layout */
+main{max-width:1240px;margin:0 auto;padding:24px 20px 0}
+main.doc>:not(footer):not(.more){max-width:860px;margin-left:auto;margin-right:auto}
+h1{font-weight:800;font-size:clamp(2.1rem,5vw,3.6rem);line-height:1.06;letter-spacing:-.03em;margin:0 0 18px;color:var(--ink)}
+main.doc h1{font-size:clamp(1.9rem,4.2vw,2.9rem);margin-top:28px}
+h2{font-weight:800;font-size:clamp(1.55rem,3vw,2.25rem);line-height:1.15;letter-spacing:-.025em;margin:0 0 14px;color:var(--ink)}
+h3{font-weight:700;font-size:1.1rem;line-height:1.35;margin:24px 0 6px;color:var(--ink)}
+p,li{color:var(--text)}
+.lede{font-size:1.14rem;color:var(--muted);max-width:52ch;margin:0 0 20px}
+.privacy{display:inline-flex;gap:10px;align-items:center;margin:0 0 4px;padding:9px 16px;border-radius:999px;background:var(--accent-soft);color:var(--accent-dark);font-weight:650;font-size:.93rem;line-height:1.4}
 .privacy svg{flex:none}
-.facts{margin:0 0 22px;color:var(--muted);font:600 .82rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.12em}
-main>p>a{font:700 .9rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;text-decoration:none;
-  display:inline-block;padding:10px 0;border-bottom:1px solid rgba(0,197,211,.45)}
-main>p>a:hover{border-color:var(--accent2)}
-.card{position:relative;background:linear-gradient(180deg,rgba(23,29,49,.92),rgba(15,20,36,.92));
-  border:1px solid var(--line);padding:18px;
-  clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));
-  animation:boot .5s ease-out both}
-.card::before,.card::after{content:"";position:absolute;width:26px;height:26px;pointer-events:none}
-.card::before{left:0;top:0;border-left:2px solid var(--accent);border-top:2px solid var(--accent)}
-.card::after{right:0;bottom:0;border-right:2px solid var(--accent2);border-bottom:2px solid var(--accent2)}
-@keyframes boot{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.card{animation:none}}
-#drop{display:block;border:1px dashed rgba(0,197,211,.55);padding:30px 16px;text-align:center;cursor:pointer;
-  background:repeating-linear-gradient(135deg,rgba(0,197,211,.035) 0 10px,transparent 10px 20px);transition:border-color .15s,background-color .15s}
-#drop.over,#drop:hover{border-color:var(--accent2);background-color:rgba(254,120,2,.06)}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0;font-size:0;color:transparent}
+.facts>span{font-size:.84rem;font-weight:600;line-height:1.3;color:#334058;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.intro .facts{gap:10px;margin:22px 0 0}
+.intro .facts>span{display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;font-size:1rem;font-weight:750;color:var(--ink);background:#fff;border:1.5px solid #bfe0e5;box-shadow:0 8px 18px -12px rgba(10,127,143,.55)}
+.intro .facts>span::before{content:"\2713";flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:.8rem;font-weight:800;line-height:1}
+.eyebrow,.why>h2::before,.howto>h2::before,.more>h2::before,.faq h2::before,.band h2::before{display:block;margin:0 0 10px;font-size:.78rem;font-weight:750;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.why>h2::before{content:"Why SnipAudio"}.howto>h2::before{content:"Step by step"}.more>h2::before{content:"More tools"}.faq h2::before{content:"Support"}
+.band h2::before{content:"Free · In your browser";color:#9fe3ea}
+/* hero + tool card */
+.hero{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:44px;align-items:center;padding:40px 0 8px}
+.hero:has(#editor:not([hidden]),#list:not([hidden]),#result:not([hidden])){grid-template-columns:minmax(0,1fr);gap:22px}
+.card{position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+#drop{display:block;border:2px dashed #bfe0e5;border-radius:18px;padding:44px 20px;text-align:center;cursor:pointer;
+  background:linear-gradient(180deg,#f4fbfc,#fff);transition:border-color .15s,background-color .15s}
+#drop.over,#drop:hover{border-color:var(--accent);background:var(--accent-soft)}
 #drop.busy{opacity:.6;pointer-events:none}
-#drop strong{display:block;font:700 1.15rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+#drop strong{display:block;font-size:1.25rem;font-weight:800;letter-spacing:-.01em;margin-bottom:6px;color:var(--ink)}
 #file{position:absolute;width:1px;height:1px;opacity:0}
-#file:focus-visible+span .btn{outline:2px solid var(--accent2);outline-offset:3px}
-.hint{color:var(--muted);font-size:.9rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border:0;cursor:pointer;
-  font:700 .88rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--accent-ink);background:var(--accent);
-  clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px));
-  transition:background-color .15s,color .15s,box-shadow .15s}
-.btn:hover{background:#3fe3ee;box-shadow:0 0 22px rgba(0,197,211,.45)}
-.btn:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
-.btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
-.btn.ghost{color:var(--ink);background:rgba(45,54,85,.55);box-shadow:inset 0 0 0 1px var(--line)}
-.btn.ghost:hover{color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-.btn.small{min-height:44px;padding:6px 14px;font-size:.78rem}
+#file:focus-visible+span .btn{outline:3px solid var(--accent2);outline-offset:3px}
+.hint{color:var(--muted);font-size:.92rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:11px 22px;border:0;border-radius:999px;cursor:pointer;
+  font:700 .95rem/1.1 var(--sans);color:var(--accent-ink);background:var(--accent);text-decoration:none;box-shadow:0 10px 22px -10px rgba(10,127,143,.7);transition:background-color .15s,box-shadow .15s,transform .15s}
+.btn:hover{background:var(--accent-dark);color:#fff;transform:translateY(-1px)}
+.btn:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none}
+.btn.ghost{color:var(--ink);background:#fff;box-shadow:inset 0 0 0 1px var(--line)}
+.btn.ghost:hover{color:var(--accent-dark);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.btn.small{min-height:44px;padding:6px 16px;font-size:.86rem}
 .btn.icon{min-width:44px;padding:6px}
-#drop .btn{margin-top:14px}
-#status{min-height:1.5em;margin:12px 0 0;font:600 .9rem/1.4 var(--mono);color:var(--accent2)}
+#drop .btn{margin-top:18px;padding:14px 28px;font-size:1rem}
+#status{min-height:1.5em;margin:12px 0 0;font-weight:600;font-size:.92rem;color:var(--accent2)}
+#status:empty{min-height:0;margin:0}
 #editor{margin-top:10px}
-#filename{font:700 .92rem/1.4 var(--mono);color:var(--accent);overflow-wrap:anywhere;margin:0 0 10px;letter-spacing:.02em}
-#wave,#timeline{width:100%;display:block;background:#04060f;border:1px solid var(--line);
-  box-shadow:inset 0 0 0 1px rgba(0,197,211,.06),0 0 0 1px rgba(6,9,22,.9)}
+#filename{font-weight:700;color:var(--accent-dark);overflow-wrap:anywhere;margin:0 0 10px}
+#wave,#timeline{width:100%;display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px}
 #wave{height:180px;touch-action:none;cursor:crosshair}
 #timeline{height:136px;margin-top:16px}
-.timeline,.tl{display:flex;justify-content:space-between;color:var(--muted);font:600 .75rem/1.4 var(--mono);font-variant-numeric:tabular-nums;margin-top:4px;letter-spacing:.04em}
-.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 20px;margin-top:16px}
-.field label{display:flex;justify-content:space-between;gap:8px;font:700 .78rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink)}
+.timeline,.tl{display:flex;justify-content:space-between;color:var(--muted);font:600 .76rem/1.4 var(--mono);font-variant-numeric:tabular-nums;margin-top:6px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px 20px;margin-top:18px}
+.field label{display:flex;justify-content:space-between;gap:8px;font-weight:700;font-size:.88rem;color:var(--ink)}
 .field output{color:var(--accent);font-variant-numeric:tabular-nums}
-.field p{margin:4px 0 0;color:var(--muted);font-size:.84rem}
-input[type=number],select{width:100%;min-height:44px;padding:8px 10px;margin-top:6px;font:600 1rem/1.2 var(--mono);color:var(--ink);
-  background:#04060f;border:1px solid var(--line);border-radius:0;font-variant-numeric:tabular-nums}
-input[type=number]:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 0 16px rgba(0,197,211,.25)}
-select option{background:#0f1424;color:var(--ink)}
+.field p{margin:4px 0 0;color:var(--muted);font-size:.85rem}
+input[type=number],select{width:100%;min-height:44px;padding:8px 12px;margin-top:6px;font:600 1rem/1.2 var(--sans);color:var(--ink);
+  background:#fff;border:1px solid #d3dae6;border-radius:12px;font-variant-numeric:tabular-nums}
+input[type=number]:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(10,127,143,.18)}
 input[type=range]{width:100%;height:32px;accent-color:var(--accent)}
-.sub{color:var(--muted);font-size:.85rem}
-h2{font:700 1.05rem/1.3 var(--mono);text-transform:uppercase;letter-spacing:.1em;margin:0 0 10px;color:var(--ink)}
-h2::before{content:"// ";color:var(--accent2)}
-#regions,#clips{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
-#regions li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);background:rgba(4,6,15,.6)}
-#regions li.active{border-color:var(--accent);background:rgba(0,197,211,.08);box-shadow:0 0 18px rgba(0,197,211,.12)}
-#regions .label{flex:1 1 180px;font:600 .9rem/1.4 var(--mono);font-variant-numeric:tabular-nums;cursor:pointer}
-#regions .label b{margin-right:8px;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
-#clips li{display:grid;grid-template-columns:44px 1fr auto;gap:8px 10px;align-items:center;padding:8px;border:1px solid var(--line);background:rgba(4,6,15,.6)}
-#clips li.dragging{border-color:var(--accent2);box-shadow:0 0 22px rgba(254,120,2,.25)}
-.handle{width:44px;height:44px;display:grid;place-items:center;cursor:grab;touch-action:none;color:var(--accent);font-size:1.3rem;user-select:none;border:1px dashed rgba(0,197,211,.5)}
+.sub{color:var(--muted);font-size:.87rem}
+.card h2{font-size:1.15rem;letter-spacing:-.01em;margin:0 0 8px}
+#regions,#clips,#files{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+#regions li{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+#regions li.active{border-color:var(--accent);background:var(--accent-soft)}
+#regions .label{flex:1 1 180px;font:600 .9rem/1.4 var(--mono);font-variant-numeric:tabular-nums;cursor:pointer;color:var(--ink)}
+#regions .label b{margin-right:8px;color:var(--accent-dark);font-family:var(--sans)}
+#clips li{display:grid;grid-template-columns:44px 1fr auto;gap:8px 10px;align-items:center;padding:8px 10px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+#clips li.dragging{border-color:var(--accent2);box-shadow:var(--shadow)}
+.handle{width:44px;height:44px;display:grid;place-items:center;cursor:grab;touch-action:none;color:var(--accent);font-size:1.3rem;user-select:none;border:1px dashed #bfe0e5;border-radius:10px;background:#fff}
 .handle:active{cursor:grabbing}
 .info{min-width:0}
-.info b{display:block;font:700 .92rem/1.35 var(--mono);overflow-wrap:anywhere}
+.info b{display:block;font-weight:700;font-size:.93rem;overflow-wrap:anywhere}
 .info span{color:var(--muted);font:600 .8rem/1.4 var(--mono);font-variant-numeric:tabular-nums}
 .moves{display:flex;gap:6px}
 .fades{grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-.fades label{display:flex;align-items:center;gap:6px;font:600 .8rem/1.4 var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.fades label{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.84rem;color:var(--muted)}
 .fades input{width:88px;margin-top:0}
-section{margin-top:44px}
-section h3{font:700 .95rem/1.4 var(--mono);color:var(--accent);margin:20px 0 4px;letter-spacing:.02em}
-section p,section li{color:#c9d3e1;max-width:70ch}
-section ol{padding-left:1.4em}
-section li::marker{color:var(--accent2);font-family:var(--mono)}
-em{color:var(--ink);font-style:normal;font-family:var(--mono);font-size:.92em}
-footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
-@media (max-width:520px){
-  main{padding-top:28px}
-  .card{padding:14px}
+/* converters */
+.lock{font-size:.98rem}
+#list{margin-top:18px}
+#files li{grid-template-columns:minmax(0,1.3fr) auto;display:grid;gap:8px 14px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.fname b{display:block;font-weight:700;font-size:.93rem;overflow-wrap:anywhere}
+.fname .dur{color:var(--muted);font:600 .8rem/1.4 var(--mono);font-variant-numeric:tabular-nums}
+.trim{display:flex;flex-wrap:wrap;gap:8px}
+.trim label{display:flex;flex-direction:column;font-weight:700;font-size:.76rem;color:var(--muted)}
+.trim input{width:96px;margin-top:4px}
+.st{grid-column:1 / 2;margin:0;font-weight:600;font-size:.84rem;color:var(--muted);min-height:1.2em}
+.st[data-state=done]{color:var(--accent-dark)}
+.st[data-state=error]{color:#c62839}
+.st[data-state=working]{color:var(--accent2)}
+.acts{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+@media (max-width:620px){#files li{grid-template-columns:minmax(0,1fr)}.st{grid-column:auto}.acts{justify-content:flex-start}}
+/* bpm finder */
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:6px}
+.panel{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px 18px}
+.big{margin:0;font-weight:800;font-size:clamp(2.2rem,8vw,3.2rem);line-height:1.1;color:var(--accent-dark);font-variant-numeric:tabular-nums;letter-spacing:-.02em;overflow-wrap:anywhere}
+.big span{font-size:.4em;color:var(--muted);letter-spacing:.08em;font-weight:700}
+.conf{margin:8px 0 10px;padding-left:10px;border-left:3px solid var(--muted);font-size:.9rem;color:var(--text)}
+.conf[data-level=strong]{border-color:var(--accent)}
+.conf[data-level=moderate]{border-color:var(--accent2)}
+.conf[data-level=weak]{border-color:#c62839}
+.choice{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.choice .btn[aria-checked=true]{color:var(--accent-dark);background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.warn{margin:12px 0 0;padding:10px 12px;border:1px solid #f3c4a4;border-radius:12px;background:#fff5ee;color:var(--ink);font-size:.9rem}
+.tapcard{margin-top:22px}
+#tap{min-height:96px;width:100%;font-size:1.1rem;border-radius:18px;touch-action:manipulation;user-select:none}
+.tapread{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin:12px 0 0}
+/* affiliate note */
+aside.aff{margin:22px 0 0;padding:16px 20px;border:1px solid var(--line);border-radius:18px;background:#fff;color:var(--text);font-size:.93rem}
+aside.aff small{display:block;margin-top:6px;color:var(--muted)}
+/* feature cards */
+.why{margin-top:88px;text-align:center}
+.why>h2{margin-bottom:10px}
+.why>p{margin:0 auto;max-width:60ch;color:var(--muted);font-size:1.05rem}
+.cards3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:36px;text-align:left}
+.feat{position:relative;padding:28px;background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.feat .num{position:absolute;top:22px;right:22px;padding:3px 10px;border-radius:999px;background:var(--panel);font:700 .75rem/1.4 var(--mono);color:var(--muted);letter-spacing:.1em}
+.feat svg{display:block;width:52px;height:52px;padding:12px;border-radius:16px;background:var(--accent-soft);color:var(--accent);margin-bottom:18px}
+.feat strong{display:block;margin-bottom:8px;font-size:1.2rem;font-weight:800;letter-spacing:-.01em;color:var(--ink)}
+.feat p{margin:8px 0 0;font-size:.97rem}
+/* content sections */
+section{margin-top:56px}
+section p,section li{max-width:72ch}
+main.tool-page section:not(.howto):not(.faq),main.doc section{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:30px 34px;box-shadow:var(--shadow)}
+main.doc section{margin-top:22px}
+main.doc section h2{font-size:clamp(1.3rem,2.4vw,1.55rem)}
+section>h3:first-child,section>h2+h3{margin-top:10px}
+section ol,section ul{padding-left:1.3em}
+section li{margin:4px 0}
+section li::marker{color:var(--accent);font-weight:700}
+/* steps */
+.howto{margin-top:88px}
+.howto ol{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;counter-reset:step}
+.howto ol>li{counter-increment:step;position:relative;margin:0;padding:26px 24px;max-width:none;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
+.howto ol>li::before{content:"Step " counter(step);display:block;margin-bottom:10px;font-size:.75rem;font-weight:750;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.howto ol>li::after{content:counter(step);position:absolute;top:8px;right:20px;font-size:3.2rem;font-weight:800;line-height:1;color:#edf1f6}
+.howto>p{max-width:72ch}
+/* related guides */
+.related{margin-top:88px}
+.related>h2::before{content:"Learn more";display:block;margin:0 0 10px;font-size:.78rem;font-weight:750;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.rgrid{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.rgrid li{margin:0;max-width:none}
+.rgrid a{display:flex;flex-direction:column;height:100%;padding:24px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);color:var(--ink);text-decoration:none;transition:transform .15s,border-color .15s}
+.rgrid a:hover{transform:translateY(-2px);border-color:#bfe0e5;color:var(--ink)}
+.rgrid b{font-size:1.1rem;font-weight:800;line-height:1.3;letter-spacing:-.01em}
+.rgrid small{display:block;margin-top:8px;color:var(--muted);font-size:.93rem;line-height:1.5;flex:1}
+.rgrid a::after{content:"Read guide \2192";display:block;margin-top:14px;font-weight:700;font-size:.92rem;color:var(--accent)}
+/* tool grid */
+.more{margin-top:88px}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:28px}
+.tool{position:relative;display:flex;flex-direction:column;gap:16px;padding:26px;color:var(--ink);text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s,border-color .15s}
+.tool:hover{color:var(--ink);transform:translateY(-2px);border-color:#bfe0e5;box-shadow:0 18px 40px -16px rgba(12,21,38,.22)}
+.tool:focus-visible{outline:3px solid var(--accent2);outline-offset:3px}
+.tool::before{content:attr(data-tag);position:absolute;top:26px;right:24px;padding:3px 10px;border-radius:999px;background:var(--panel);font-size:.7rem;font-weight:750;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-dark)}
+.tool svg{flex:none;width:48px;height:48px;padding:12px;border-radius:14px;background:var(--accent-soft);color:var(--accent)}
+.tool b{display:block;font-size:1.22rem;font-weight:800;letter-spacing:-.015em}
+.tool small{display:block;margin-top:6px;color:var(--muted);font-size:.95rem;line-height:1.45}
+.tool>span::after{content:"Open tool \2192";display:block;margin-top:16px;font-weight:700;font-size:.92rem;color:var(--accent)}
+.tool[aria-current="page"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent),var(--shadow)}
+.tool[aria-current="page"]>span::after{content:"You are here";color:var(--muted)}
+/* call to action */
+.band{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;margin-top:88px;padding:44px 48px;border-radius:30px;color:#fff;
+  background:radial-gradient(600px 300px at 100% 100%,rgba(224,100,28,.35),transparent 70%),linear-gradient(120deg,#0b1526 0%,#0b2a3a 45%,#0a7f8f 100%);box-shadow:0 24px 60px -24px rgba(11,21,38,.55)}
+.band h2{color:#fff;margin:0 0 8px}
+.band p{color:#cfe3ea;margin:0;max-width:56ch}
+.band .btn{background:#fff;color:var(--ink);padding:15px 30px;font-size:1rem;box-shadow:none}
+.band .btn:hover{background:var(--accent-soft);color:var(--ink)}
+/* faq */
+.faq{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:40px;align-items:start;margin-top:88px}
+.fq-h{position:sticky;top:104px}
+.fq-h h2{margin-bottom:12px}
+.fq-h p{color:var(--muted);margin:0}
+.faq details{margin:0 0 12px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 1px 2px rgba(12,21,38,.04);transition:border-color .15s}
+.faq details[open]{border-color:#bfe0e5;box-shadow:var(--shadow)}
+.faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;padding:18px 22px;cursor:pointer;list-style:none;border-radius:18px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:focus-visible{outline:3px solid var(--accent2);outline-offset:2px}
+.faq summary h3{margin:0;font-size:1.06rem}
+.faq summary::after{content:"";flex:none;width:9px;height:9px;margin:-4px 8px 0 0;border:solid var(--muted);border-width:0 2px 2px 0;transform:rotate(45deg);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(-135deg);margin-top:4px}
+.faq details>:not(summary){margin:0 22px 14px}
+.faq details>:last-child{margin-bottom:22px}
+/* guides */
+.answer{border:1px solid #bfe0e5;border-left:5px solid var(--accent);border-radius:18px;background:#fff;padding:18px 22px;margin:0 0 20px;box-shadow:var(--shadow)}
+.answer p{margin:.4em 0}
+.meta{color:var(--muted);font-size:14px;margin:-6px 0 16px}
+.tablewrap{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:14px}
+.tablewrap table{border-collapse:collapse;min-width:100%;font:14px/1.45 var(--mono)}
+.tablewrap th,.tablewrap td{border-bottom:1px solid var(--line);padding:8px 12px;text-align:right;white-space:nowrap}
+.tablewrap th{background:var(--panel);font-family:var(--sans);font-weight:700}
+.tablewrap th:first-child,.tablewrap td:first-child{text-align:left}
+.tablewrap caption{caption-side:bottom;text-align:left;color:var(--muted);font:13px/1.4 var(--sans);padding:8px 12px;white-space:normal}
+.guides{list-style:none;padding:0!important;display:grid;gap:12px}
+.guides li{margin:0;max-width:none;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+.guides li a{font-weight:750;font-size:1.08rem;text-decoration:none}
+.guides small{display:block;margin-top:4px;color:var(--muted)}
+figure{margin:16px 0}figure img{max-width:100%;height:auto;display:block;border-radius:14px}figcaption{color:var(--muted);font-size:13px}
+/* footer */
+footer.site{margin:88px 0 24px;padding:40px 40px 26px;background:#fff;border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);font-size:.93rem}
+.fgrid{display:grid;grid-template-columns:minmax(0,2fr) repeat(3,minmax(0,1fr));gap:28px}
+.fgrid p{margin:10px 0 0;color:var(--muted);max-width:36ch}
+.fgrid b{display:block;margin:10px 0 8px;color:var(--ink)}
+.fgrid ul{list-style:none;margin:0;padding:0}
+.fgrid li a{display:inline-block;padding:6px 0;color:var(--text);text-decoration:none}
+.fgrid li a:hover{color:var(--accent)}
+.fnote{margin-top:28px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+.fnote p{margin:0 0 6px;color:var(--muted)}
+/* phones */
+@media (max-width:900px){
+  .hero{grid-template-columns:minmax(0,1fr);gap:24px;padding-top:24px}
+  .cards3,.rgrid{grid-template-columns:minmax(0,1fr)}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .faq{grid-template-columns:minmax(0,1fr);gap:18px}.fq-h{position:static}
+  .fgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.fgrid>:first-child{grid-column:1 / -1}
+}
+@media (max-width:560px){
+  main{padding:12px 16px 0}
+  .hero{display:flex;flex-direction:column;align-items:stretch;gap:16px;padding-top:18px}
+  .intro{display:contents}
+  .hero h1{margin:0}
+  .intro .facts{gap:8px}.intro .facts>span{font-size:.92rem;padding:7px 13px 7px 7px;gap:7px}.intro .facts>span::before{width:22px;height:22px}
+  .intro .lede{order:2;margin:6px 0 0}.intro .facts{margin:0}.hero>.card{order:1}
+  .card{padding:14px;border-radius:20px}
+  #drop{padding:28px 14px}
   #clips li{grid-template-columns:44px minmax(0,1fr)}
   .moves{grid-column:1 / -1;justify-content:flex-end}
   .fades{grid-column:1 / -1}
+  .why,.howto,.more,.faq,.band,.related{margin-top:60px}
+  main.tool-page section:not(.howto):not(.faq),main.doc section{padding:22px 18px}
+  .tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .tool{padding:16px 14px;gap:10px;border-radius:18px}.tool::before,.tool small,.tool>span::after{display:none}.tool b{font-size:1rem}
+  .tool svg{width:40px;height:40px;padding:9px}
+  .band{padding:30px 22px;border-radius:24px}
+  .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  footer.site{padding:28px 20px 20px;border-radius:22px}
 }
-/* tool switcher */
-.tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 30px}
-.tool{display:flex;gap:12px;align-items:center;min-height:64px;padding:12px 16px;text-decoration:none;color:var(--ink);
-  border:1px solid var(--line);background:rgba(15,20,36,.85);
-  clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));
-  transition:border-color .15s,background-color .15s,box-shadow .15s}
-.tool svg{flex:none;color:var(--accent2)}
-.tool b{display:block;font:700 .95rem/1.25 var(--mono);text-transform:uppercase;letter-spacing:.08em}
-.tool small{display:block;margin-top:2px;color:var(--muted);font-size:.84rem;line-height:1.35}
-.tool:hover{color:var(--ink);border-color:var(--accent2);background:rgba(254,120,2,.08);box-shadow:0 0 22px rgba(254,120,2,.18)}
-.tool:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}
-.tool[aria-current="page"]{border-color:var(--accent);background:rgba(0,197,211,.10);box-shadow:inset 0 0 0 1px var(--accent)}
-.tool[aria-current="page"] svg{color:var(--accent)}
-.tool[aria-current="page"]:hover{box-shadow:inset 0 0 0 1px var(--accent)}
-@media (max-width:520px){.tool{gap:8px;padding:10px;min-height:72px}.tool b{font-size:.82rem;letter-spacing:.05em}.tool small{font-size:.76rem}}
-@media (max-width:520px){.tools{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin-bottom:22px}.tool{grid-column:auto!important;flex-direction:column;justify-content:center;gap:4px;min-height:60px;padding:8px 2px;text-align:center}.tool svg{width:20px;height:20px}.tool small{display:none}.tool b{font-size:.62rem;letter-spacing:.02em;line-height:1.2}}
-/* phones: the file box comes first; the intro line and the facts line follow it */
-@media (max-width:520px){main{display:flex;flex-direction:column}main>.lede,main>.facts{order:1}main>.lede{margin:18px 0 0}main>.facts{margin:10px 0 0}main>.card~*{order:2}}
 </style>
+<title>Audio Joiner – Merge Audio Files Online in Your Browser</title>
+<meta name="description" content="Online audio joiner: merge audio files into one track in your browser. Combine MP3 and WAV clips, drag them into order, add fades and crossfades, preview, then export MP3 or WAV. Your files are never uploaded.">
+<!-- Google Analytics 4: page visits only; audio files never leave the browser -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VFZKY4K212"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',region:['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO', 'GB', 'CH']});
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'granted'});
+gtag('js',new Date());gtag('config','G-VFZKY4K212');
+</script>
+<!--meta-->
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="canonical" href="https://snipaudio.com/audio-joiner/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SnipAudio">
+<meta property="og:title" content="Audio Joiner – Merge Audio Files Online in Your Browser">
+<meta property="og:description" content="Online audio joiner: merge audio files into one track in your browser. Combine MP3 and WAV clips, drag them into order, add fades and crossfades, preview, then export MP3 or WAV. Your files are never uploaded.">
+<meta property="og:url" content="https://snipaudio.com/audio-joiner/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Audio Joiner", "url": "https://snipaudio.com/audio-joiner/", "description": "Online audio joiner: merge audio files into one track in your browser. Combine MP3 and WAV clips, drag them into order, add fades and crossfades, preview, then export MP3 or WAV. Your files are never uploaded.", "applicationCategory": "MultimediaApplication", "operatingSystem": "Any", "browserRequirements": "Requires a modern web browser with JavaScript", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "SnipAudio", "url": "https://snipaudio.com/", "logo": "https://snipaudio.com/icon-512.png"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "url": "https://snipaudio.com/audio-joiner/", "mainEntity": [{"@type": "Question", "name": "Are my files uploaded to combine them?", "acceptedAnswer": {"@type": "Answer", "text": "No. This audio merger decodes, joins and encodes the files inside your browser. From this site, your browser downloads only this page, its two scripts and the small site icon. The page also loads Google Analytics, which counts visits and never receives your audio."}}, {"@type": "Question", "name": "Can I use it as an MP3 joiner?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Add MP3 files, put them in order and export the combined audio as one MP3 at 128, 192, 256 or 320 kbps, or as WAV. You can also mix MP3 and WAV clips in one join."}}, {"@type": "Question", "name": "What does the exported file sound like?", "acceptedAnswer": {"@type": "Answer", "text": "It is written at 44.1 kHz. If any clip is stereo, the result is stereo and mono clips play in both channels; if every clip is mono, the result is mono. With WAV and no fades or crossfade, the clips follow each other sample for sample. MP3 encoding adds a short stretch of silence at the very start of the file."}}, {"@type": "Question", "name": "Is there a limit on files or length?", "acceptedAnswer": {"@type": "Answer", "text": "This page sets none. All decoded clips are kept in memory while you work, so many or long files need more memory and the practical limit depends on your device."}}]}</script>
+<!--/meta-->
 </head>
 <body>
-<main>
-  <nav class="tools" aria-label="Audio tools"><a class="tool" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" href="./" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" href="../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" href="../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav>
+<!--hdr--><header class="top"><div class="bar"><a class="brand" href="../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a><nav class="menu" aria-label="Site"><details class="dd"><summary>Tools</summary><div class="ddp"><a href="../">Audio Cutter<small>Cut part of one file</small></a><a href="../audio-joiner/" aria-current="page">Audio Joiner<small>Merge several files into one</small></a><a href="../bpm-finder/">BPM Finder<small>Find the tempo and key of a song</small></a><a href="../m4a-to-mp3/">M4A to MP3<small>Convert M4A files to MP3</small></a><a href="../mp3-to-wav/">MP3 to WAV<small>Convert MP3 files to WAV</small></a><a href="../wav-to-mp3/">WAV to MP3<small>Convert WAV files to MP3</small></a></div></details><a href="../guides/">Guides</a><a class="wide" href="../about/">About</a></nav><a class="btn cta" href="../">Cut audio</a></div></header><script>document.addEventListener('click',e=>{for(const d of document.querySelectorAll('details.dd[open]'))if(!d.contains(e.target))d.open=false});</script><!--/hdr-->
+<main class="tool-page">
+  <div class="hero"><div class="intro">
   <h1>Audio Joiner</h1>
   <p class="lede">Merge audio files into one track with this online audio joiner. Put your clips in order and combine audio files into a single MP3 or WAV.</p>
   <p class="privacy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><rect x="4" y="11" width="16" height="10"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Everything runs in your browser. Your files are never uploaded to any server.</span></p>
-  <p class="facts">No sign-up · Unlimited joins · No watermark</p>
-
-  <div class="card">
+  <p class="facts"><span>No sign-up</span> · <span>Unlimited joins</span> · <span>No watermark</span></p>
+  </div>
+  <div class="card" id="tool">
     <label id="drop">
-      <input id="file" type="file" multiple accept="audio/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm">
+      <input id="file" type="file" multiple accept="audio/*,video/*,.mp3,.wav,.m4a,.aac,.ogg,.oga,.opus,.flac,.webm,.mp4,.m4v,.mov,.mkv,.m4b">
       <span>
         <strong>Add the audio files you want to merge</strong>
-        <span class="hint">Pick two or more files at once, or add them one by one. MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them.</span><br>
+        <span class="hint">Pick two or more files at once, or add them one by one. MP3 or WAV. M4A, AAC, OGG, Opus and FLAC also work if your browser can decode them, and so does the sound of an MP4 or MOV video.</span><br>
         <span class="btn">Choose audio files</span>
       </span>
     </label>
@@ -209,13 +367,20 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
       </div>
     </div>
   </div>
+  </div>
 
-  <aside style="margin:16px 0 0;padding:12px 14px;border:1px dashed var(--line);color:#c9d3e1;font-size:.92rem">
+  <aside class="aff">
     Need the vocals or the backing track of a file on its own? <a href="https://www.lalal.ai/?fp_ref=peilun-05a494" rel="sponsored noopener" target="_blank">LALAL.AI<span aria-hidden="true"> ↗</span></a> can remove vocals or instrumentals from a song with AI.
-    <small style="display:block;margin-top:6px;color:var(--muted)">Affiliate link: I may earn a commission if you buy. LALAL.AI works on files you upload to it, unlike the tools on this site.</small>
+    <small>Affiliate link: I may earn a commission if you buy. LALAL.AI works on files you upload to it, unlike the tools on this site.</small>
   </aside>
 
-  <section>
+  <!--why--><div class="why"><h2>Simple audio tools that respect your files</h2><p>Every tool on SnipAudio works the same way: pick a file, adjust, download.</p><div class="cards3">
+<div class="feat"><span class="num">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><p><strong>Runs in your browser</strong> This page opens and processes your file on your own device. Nothing is uploaded, so there is no upload to wait for and no copy on a server.</p></div>
+<div class="feat"><span class="num">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v9H4v-9"/><path d="M2 7h20v5H2z"/><path d="M12 21V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg><p><strong>Free, with no sign-up</strong> No account, no email and no watermark. Use it as often as you like; the only limit is your device’s memory.</p></div>
+<div class="feat"><span class="num">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><p><strong>Works on your phone</strong> Open the page in your phone’s browser. There is no app to install, and the buttons are sized for fingers.</p></div>
+</div></div><!--/why-->
+
+  <section class="howto">
     <h2>How to merge audio files online</h2>
     <ol>
       <li>Choose two or more audio files. You can add more later.</li>
@@ -226,23 +391,57 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
     </ol>
   </section>
 
-  <section>
+  <!--more--><div class="more"><h2>Continue with the next audio task</h2><nav class="tools" aria-label="Audio tools"><a class="tool" data-tag="Task" href="../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" data-tag="Task" href="../audio-joiner/" aria-current="page"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" data-tag="Analyze" href="../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" data-tag="Convert" href="../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" data-tag="Convert" href="../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" data-tag="Convert" href="../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav></div><!--/more-->
+
+  <!--band--><div class="band"><div><h2>Ready to join your files?</h2><p>Your file opens right here in the browser and never leaves your device.</p></div><a class="btn" href="#tool">Choose audio files ↑</a></div><!--/band-->
+
+  <section class="faq"><div class="fq-h">
     <h2>Audio joiner FAQ</h2>
-    <h3>Are my files uploaded to combine them?</h3>
-    <p>No. This audio merger decodes, joins and encodes the files inside your browser. The only files your browser downloads are this page and its two scripts, all from this site.</p>
-    <h3>Can I use it as an MP3 joiner?</h3>
+    <p>Something not covered here? Email <a href="mailto:hello@snipaudio.com">hello@snipaudio.com</a>.</p></div>
+  <div class="fq-l">
+    <details open><summary><h3>Are my files uploaded to combine them?</h3></summary>
+    <p>No. This audio merger decodes, joins and encodes the files inside your browser. From this site, your browser downloads only this page, its two scripts and the small site icon. The page also loads Google Analytics, which counts visits and never receives your audio.</p>
+    </details>
+    <details><summary><h3>Can I use it as an MP3 joiner?</h3></summary>
     <p>Yes. Add MP3 files, put them in order and export the combined audio as one MP3 at 128, 192, 256 or 320 kbps, or as WAV. You can also mix MP3 and WAV clips in one join.</p>
-    <h3>What does the exported file sound like?</h3>
+    </details>
+    <details><summary><h3>What does the exported file sound like?</h3></summary>
     <p>It is written at 44.1 kHz. If any clip is stereo, the result is stereo and mono clips play in both channels; if every clip is mono, the result is mono. With WAV and no fades or crossfade, the clips follow each other sample for sample. MP3 encoding adds a short stretch of silence at the very start of the file.</p>
-    <h3>Is there a limit on files or length?</h3>
+    </details>
+    <details><summary><h3>Is there a limit on files or length?</h3></summary>
     <p>This page sets none. All decoded clips are kept in memory while you work, so many or long files need more memory and the practical limit depends on your device.</p>
+    </details>
+  </div>
   </section>
 
-  <footer>
-    Need just one part of a file? <a href="../">Cut a section of an audio file with the audio cutter</a>.<br>
-    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="../LICENSE-lamejs.txt">LGPL 3.0</a>.<br>
-    <a href="../about/" style="display:inline-block;padding:10px 0">About</a> · <a href="../privacy/" style="display:inline-block;padding:10px 0">Privacy</a> · <a href="../contact/" style="display:inline-block;padding:10px 0">Contact</a>
-  </footer>
+  <!--ftr--><footer class="site"><div class="fgrid">
+<div><a class="brand" href="../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a>
+<p>Free audio tools that run in your browser. Your files never leave your device.</p>
+<p><a href="mailto:hello@snipaudio.com">hello@snipaudio.com</a></p></div>
+<div><b>Tools</b><ul>
+<li><a href="../">Audio Cutter</a></li>
+<li><a href="../audio-joiner/">Audio Joiner</a></li>
+<li><a href="../bpm-finder/">BPM Finder</a></li>
+<li><a href="../m4a-to-mp3/">M4A to MP3</a></li>
+<li><a href="../mp3-to-wav/">MP3 to WAV</a></li>
+<li><a href="../wav-to-mp3/">WAV to MP3</a></li>
+</ul></div>
+<div><b>Guides</b><ul>
+<li><a href="../guides/does-online-mp3-cutter-upload-your-file/">Does an online MP3 cutter upload your file?</a></li>
+<li><a href="../guides/does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a></li>
+<li><a href="../guides/can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a></li>
+<li><a href="../guides/">All guides</a></li>
+</ul></div>
+<div><b>Site</b><ul>
+<li><a href="../about/">About</a></li>
+<li><a href="../privacy/">Privacy</a></li>
+<li><a href="../contact/">Contact</a></li>
+</ul></div>
+</div><div class="fnote">
+<p>Need just one part of a file? <a href="../">Cut a section of an audio file with the audio cutter</a>.<br>
+    MP3 encoding uses <a href="https://github.com/zhuker/lamejs" rel="noopener">lamejs</a>, licensed under the <a href="../LICENSE-lamejs.txt">LGPL 3.0</a>.</p>
+<p>© 2026 SnipAudio</p>
+</div></footer><!--/ftr-->
 </main>
 <script src="../lame.min.js"></script>
 <script src="joiner.js"></script>

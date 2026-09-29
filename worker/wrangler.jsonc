@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   // Static site ../cutter-site plus a small Worker (src/worker.js) for agent resources.
-  // The Worker runs first only on the 9 page paths (Markdown negotiation + Link header);
+  // The Worker runs first only on the 9 page paths (Markdown negotiation + Link header) and /media/* (Range → 206 for video);
   // other static files are served without invoking it. Paths with no static file reach the Worker.
   "name": "snipaudio",
   "main": "src/worker.js",

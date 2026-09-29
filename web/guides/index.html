@@ -196,6 +196,7 @@ section li::marker{color:var(--accent);font-weight:700}
 .related>h2::before{content:"Learn more";display:block;margin:0 0 10px;font-size:.78rem;font-weight:750;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
 .rgrid{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .rgrid li{margin:0;max-width:none}
+main.doc .rgrid{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 .rgrid a{display:flex;flex-direction:column;height:100%;padding:24px;background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);color:var(--ink);text-decoration:none;transition:transform .15s,border-color .15s}
 .rgrid a:hover{transform:translateY(-2px);border-color:#bfe0e5;color:var(--ink)}
 .rgrid b{font-size:1.1rem;font-weight:800;line-height:1.3;letter-spacing:-.01em}
@@ -322,6 +323,7 @@ gtag('js',new Date());gtag('config','G-VFZKY4K212');
   <section style="margin-top:0">
     <p>Short answers to questions about cutting, joining and converting audio, backed by tests we ran with the tools on this site.</p>
     <ul class="guides">
+    <li><a href="combine-audio-files-different-sample-rates/">What happens when you combine audio files with different sample rates?</a><small>8 to 96 kHz, mono and stereo clips joined into one 44.1 kHz file kept their speed, pitch and level. Where the leftovers are, and how 5.1 is folded.</small></li>
     <li><a href="can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a><small>Typed cut times landed on the exact sample in every WAV export we tested. What moves an MP3 trim by 25.1 ms, and how to avoid it.</small></li>
     <li><a href="does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a><small>Yes, when the cutter re-encodes. Measured loss per bitrate over 10 re-cuts, and why WAV or 320 kbps export avoids most of it.</small></li>
     <li><a href="does-online-mp3-cutter-upload-your-file/">Does an online MP3 cutter upload your file?</a><small>How to check in two minutes whether an online cutter sends your file anywhere, and what our own network capture showed: 0 bytes sent.</small></li>
@@ -343,6 +345,7 @@ gtag('js',new Date());gtag('config','G-VFZKY4K212');
 <li><a href="../wav-to-mp3/">WAV to MP3</a></li>
 </ul></div>
 <div><b>Guides</b><ul>
+<li><a href="../guides/combine-audio-files-different-sample-rates/">What happens when you combine audio files with different sample rates?</a></li>
 <li><a href="../guides/does-online-mp3-cutter-upload-your-file/">Does an online MP3 cutter upload your file?</a></li>
 <li><a href="../guides/does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a></li>
 <li><a href="../guides/can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a></li>

@@ -293,9 +293,9 @@ footer.site{margin:88px 0 24px;padding:40px 40px 26px;background:#fff;border:1px
   footer.site{padding:28px 20px 20px;border-radius:22px}
 }
 </style>
-<title>Trim MP3 to the Millisecond? We Tested Where the Cut Lands</title>
-<meta name="description" content="We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.">
-<link rel="canonical" href="https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/">
+<title>Combine Audio Files With Different Sample Rates: What Happens</title>
+<meta name="description" content="We joined 8, 22.05, 44.1, 48 and 96 kHz clips, mono, stereo and 5.1, in a browser audio joiner and measured the result: length, pitch, level and leftovers.">
+<link rel="canonical" href="https://snipaudio.com/guides/combine-audio-files-different-sample-rates/">
 <!-- Google Analytics 4: page visits only; audio files never leave the browser -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-VFZKY4K212"></script>
 <script>
@@ -310,109 +310,123 @@ gtag('js',new Date());gtag('config','G-VFZKY4K212');
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="SnipAudio">
-<meta property="og:title" content="Trim MP3 to the Millisecond? We Tested Where the Cut Lands">
-<meta property="og:description" content="We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.">
-<meta property="og:url" content="https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/">
+<meta property="og:title" content="Combine Audio Files With Different Sample Rates: What Happens">
+<meta property="og:description" content="We joined 8, 22.05, 44.1, 48 and 96 kHz clips, mono, stereo and 5.1, in a browser audio joiner and measured the result: length, pitch, level and leftovers.">
+<meta property="og:url" content="https://snipaudio.com/guides/combine-audio-files-different-sample-rates/">
 <meta name="twitter:card" content="summary">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Can you trim an MP3 to the exact millisecond?", "description": "We typed cut times into a browser MP3 trimmer and checked which samples came out. WAV export hit the exact sample; two MP3 cases were 25.1 ms off.", "url": "https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/", "mainEntityOfPage": "https://snipaudio.com/guides/can-you-trim-mp3-to-the-millisecond/", "datePublished": "2026-09-28", "dateModified": "2026-09-28", "inLanguage": "en", "author": {"@type": "Person", "name": "patrick-eu", "url": "https://snipaudio.com/about/"}, "publisher": {"@type": "Organization", "name": "SnipAudio", "url": "https://snipaudio.com/", "logo": "https://snipaudio.com/icon-512.png"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "What happens when you combine audio files with different sample rates?", "description": "We joined 8, 22.05, 44.1, 48 and 96 kHz clips, mono, stereo and 5.1, in a browser audio joiner and measured the result: length, pitch, level and leftovers.", "url": "https://snipaudio.com/guides/combine-audio-files-different-sample-rates/", "mainEntityOfPage": "https://snipaudio.com/guides/combine-audio-files-different-sample-rates/", "datePublished": "2026-09-29", "dateModified": "2026-09-29", "inLanguage": "en", "author": {"@type": "Person", "name": "patrick-eu", "url": "https://snipaudio.com/about/"}, "publisher": {"@type": "Organization", "name": "SnipAudio", "url": "https://snipaudio.com/", "logo": "https://snipaudio.com/icon-512.png"}}</script>
 <!--/meta-->
 </head>
 <body>
 <!--hdr--><header class="top"><div class="bar"><a class="brand" href="../../"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect width="34" height="34" rx="10" fill="#0a7f8f"/><path d="M8 17v0M12 12v10M16 8v18M20 13v8M24 10v14M28 16v2" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>SnipAudio</a><nav class="menu" aria-label="Site"><details class="dd"><summary>Tools</summary><div class="ddp"><a href="../../">Audio Cutter<small>Cut part of one file</small></a><a href="../../audio-joiner/">Audio Joiner<small>Merge several files into one</small></a><a href="../../bpm-finder/">BPM Finder<small>Find the tempo and key of a song</small></a><a href="../../m4a-to-mp3/">M4A to MP3<small>Convert M4A files to MP3</small></a><a href="../../mp3-to-wav/">MP3 to WAV<small>Convert MP3 files to WAV</small></a><a href="../../wav-to-mp3/">WAV to MP3<small>Convert WAV files to MP3</small></a></div></details><a href="../../guides/">Guides</a><a class="wide" href="../../about/">About</a></nav><a class="btn cta" href="../../">Cut audio</a></div></header><script>document.addEventListener('click',e=>{for(const d of document.querySelectorAll('details.dd[open]'))if(!d.contains(e.target))d.open=false});</script><!--/hdr-->
 <main class="doc">
-  <h1>Can you trim an MP3 to the exact millisecond?</h1>
-  <p class="meta">Published 2026-09-28 · by patrick-eu</p>
+  <h1>What happens when you combine audio files with different sample rates?</h1>
+  <p class="meta">Published 2026-09-29 · by patrick-eu</p>
   <div class="answer" data-own>
-    <p><b>Short answer:</b> yes, if you type the times and export WAV. We typed start and end times into this site's <a href="../../">audio cutter</a> and read back which samples each clip contained. In all 12 cuts on a 44.1 kHz WAV (10 typed, 2 dragged, on a desktop and a phone-sized screen), the clip started on exactly the sample we expected, <b>0 samples off</b>, and had exactly the expected length.</p>
-    <p>Two things moved a trim by <b>1,105 samples (25.1 ms at 44.1 kHz)</b> in our tests:</p>
+    <p><b>Short answer:</b> the joiner converts every clip to 44.1 kHz before joining, so clips with different sample rates play at the right speed and pitch. We joined 8, 22.05, 44.1, 48 and 96 kHz clips in one go and measured the file that came out:</p>
     <ul>
-      <li><b>Exporting MP3.</b> The MP3 encoder puts 25.1 ms of silence in front of the clip, so everything plays 25.1 ms late.</li>
-      <li><b>Opening an MP3 that has no LAME header</b>, such as an MP3 saved by this cutter. Chrome's decoder keeps the encoder's silence at the start, so the cut lands 25.1 ms <i>earlier</i> in the music than the time you typed. An MP3 with the header was trimmed correctly.</li>
+      <li><b>Speed and pitch:</b> unchanged. Every test tone came back at its exact frequency (441.0 Hz stayed 441.0 Hz), and every clip kept its length to within 1 sample (0.02 ms).</li>
+      <li><b>Mono with stereo:</b> the result is stereo, and each mono clip plays on both sides at its own level (-6.0 dBFS in, -6.0 dBFS out on each side). If every clip is mono, the result stays mono.</li>
+      <li><b>Volume:</b> unchanged. The joiner does not even out loud and quiet clips.</li>
+      <li><b>5.1 files:</b> folded to stereo the usual way, with the centre speaker on both sides and the LFE (bass) speaker left out.</li>
     </ul>
-    <p>To trim an MP3 precisely: open the <a href="../../">audio cutter</a>, type the times in the <b>Start</b> and <b>End</b> boxes instead of dragging, choose <b>WAV (16-bit PCM)</b> under Export format, and cut from your original file.</p>
+    <p>To combine audio files like this, open the <a href="../../audio-joiner/">audio joiner</a>, add all the files, and pick <b>WAV</b> under Export format if you want the joined clips exactly as converted. No sample rate setting is needed.</p>
   </div>
 
   <section>
-    <h2>What "precise" means for an audio file</h2>
-    <p>Digital audio is a row of samples. At 44.1 kHz there are 44,100 per second, so one sample lasts about 0.023 ms. A trimmer turns the time you choose into a sample number and keeps the samples between the two numbers.</p>
-    <p>On this site the time boxes take milliseconds. One millisecond is 44.1 samples, so a typed time can land on roughly every 44th sample, and the cut starts on the sample nearest that time. Anything past three decimals is rounded: we typed 7.0005 and the box changed it to 7.001.</p>
-    <p>Precision can go wrong in three places: the time you set may not be the time used, the tool may read your file with a shift, and the saved file may add something of its own. We tested each one.</p>
+    <h2>Why sample rate matters when you combine audio</h2>
+    <p>A sample rate is how many values per second a file stores: 44,100 for CD audio (the Red Book standard), 48,000, or as little as 8,000 in some voice recordings. One output file can only have one sample rate. If a tool copied the values of a 48 kHz clip into a 44.1 kHz file without converting them, that clip would play 8.8% longer and lower in pitch, because its 48,000 values per second would be read at 44,100 per second.</p>
+    <p>So a joiner has to resample: work out new values at the output rate that describe the same sound. The <a href="../../audio-joiner/">audio joiner</a> on this site asks the browser to decode every file at 44.1 kHz, so the resampling is done by the browser's own decoder, on your device. We tested it in Chromium; we did not test Firefox or Safari.</p>
   </section>
 
   <section data-own>
     <h2>How we tested</h2>
     <ul>
-      <li><b>Real tool, real browser.</b> Playwright drove Chromium 153 on a local copy of this site's cutter page, once with a desktop window and once with a Pixel 5 phone profile. It opened each file, typed times into the Start and End boxes, pressed Download and saved what came out. Firefox and Safari were not tested.</li>
-      <li><b>A file where every sample carries its own number.</b> We built a 60 s, 44.1 kHz, 16-bit stereo WAV whose left and right values together spell out each sample's position. Any clip cut from it tells you exactly which samples it kept, even after the ±1 rounding the tool applies. The idea of marking the audio so you can see which samples a selection really holds comes from a proposal page on the old Audacity Wiki (<a href="https://web.archive.org/web/20221112175715/https://wiki.audacityteam.org/wiki/Proposal_Displaying_Samples" rel="noopener">archived snapshot of 2022-11-12</a>). We ran our own version of it on our own tool.</li>
-      <li><b>A file with clicks at known times.</b> For MP3s and a 48 kHz file, where sample numbers do not survive, we used 60 s of silence with short noise bursts at known times (1.0000 s, 3.0003 s, 5.0006 s and so on). We found each burst in the output by cross-correlation and compared where it was with where it should be if the cut began exactly at the typed time.</li>
-      <li><b>MP3 sources:</b> the same click file encoded at 128 kbps two ways: by this site's own MP3 encoder (lamejs), which writes no LAME header, and by FFmpeg 4.4.2 with libmp3lame, which does. FFprobe reports a start time of 0.000000 s for the first and 0.025057 s for the second.</li>
-      <li><b>MP3 exports</b> were decoded twice, with FFmpeg 4.4.2 and with Chromium's own decoder (the one browsers use for playback). Both gave the same results.</li>
+      <li><b>Clips:</b> short files we generated ourselves, each made of pure sine tones so pitch, level and length can be checked exactly: a 22.05 kHz mono clip (441 Hz), a 48 kHz stereo clip (1,000 Hz left, 2,500 Hz right), a 44.1 kHz stereo clip, an 8 kHz mono clip (300 Hz, like a phone recording), a 96 kHz mono clip with a 30 kHz tone above hearing, a 48 kHz stereo clip with a 23 kHz tone, a 48 kHz 5.1 surround WAV with a different tone for each of its six speakers, and a 48 kHz stereo MP3 made with FFmpeg's LAME encoder at 192 kbps.</li>
+      <li><b>Tool:</b> this site's audio joiner, run in Chromium 153 through Playwright. All files were added with one file pick, crossfade 0, no fades, exported as WAV, and once as MP3 at 128 kbps.</li>
+      <li><b>Measured:</b> samples per clip in the joined file, the frequency and level of each tone, whether the left and right sides are identical, and how far each clip is from ideal sine tones (in dB; higher is cleaner).</li>
     </ul>
   </section>
 
   <section data-own>
-    <h2>Typed times on a WAV: which samples came out</h2>
+    <h2>Results: length, pitch and level after joining</h2>
+    <p>Six clips at five sample rates went in; one 44.1 kHz stereo WAV of 529,199 samples came out. The page showed 12.000 s total, and the joined file held exactly the sum of the six clips.</p>
     <div class="tablewrap"><table>
-      <thead><tr><th>You type</th><th>Box shows</th><th>First sample expected</th><th>First sample in clip</th><th>Length expected</th><th>Length in clip</th></tr></thead>
+      <thead><tr><th>Clip</th><th>Samples in the join (ideal at 44.1 kHz)</th><th>Tone in, tone out</th><th>Level in, level out</th><th>Clean (dB)</th></tr></thead>
       <tbody>
-        <tr><td>12.345 to 16.789</td><td>12.345 / 16.789</td><td>544,415</td><td>544,415</td><td>195,980</td><td>195,980</td></tr>
-        <tr><td>0.001 to 0.5</td><td>0.001 / 0.500</td><td>44</td><td>44</td><td>22,006</td><td>22,006</td></tr>
-        <tr><td>7.0005 to 9</td><td>7.001 / 9.000</td><td>308,744</td><td>308,744</td><td>88,156</td><td>88,156</td></tr>
-        <tr><td>33.3333 to 35</td><td>33.333 / 35.000</td><td>1,469,985</td><td>1,469,985</td><td>73,515</td><td>73,515</td></tr>
-        <tr><td>59.5 to 60 (file end)</td><td>59.500 / 60.000</td><td>2,623,950</td><td>2,623,950</td><td>22,050</td><td>22,050</td></tr>
-        <tr><td>Drag, desktop</td><td>22.494 / 40.000</td><td>991,985</td><td>991,985</td><td>772,015</td><td>772,015</td></tr>
-        <tr><td>Drag, phone size</td><td>26.707 / 40.000</td><td>1,177,779</td><td>1,177,779</td><td>586,221</td><td>586,221</td></tr>
+        <tr><td>22.05 kHz mono, 2 s</td><td>88,200 (88,200)</td><td>441 Hz, 441.0 Hz</td><td>-6.0, -6.0 dBFS both sides</td><td>86.1</td></tr>
+        <tr><td>48 kHz stereo, 3 s</td><td>132,300 (132,300)</td><td>1,000 / 2,500 Hz, 1,000.0 / 2,500.0 Hz</td><td>-6.0 / -12.0, -6.0 / -12.0 dBFS</td><td>86.3 / 82.3</td></tr>
+        <tr><td>44.1 kHz stereo, 1 s</td><td>44,100 (44,100)</td><td>600 / 700 Hz, 600.0 / 700.0 Hz</td><td>-6.0, -6.0 dBFS</td><td>86.6 / 87.0</td></tr>
+        <tr><td>8 kHz mono, 2.5 s</td><td>110,250 (110,250)</td><td>300 Hz, 300.0 Hz</td><td>-6.0, -6.0 dBFS both sides</td><td>87.8</td></tr>
+        <tr><td>96 kHz mono, 1.5 s</td><td>66,150 (66,150)</td><td>5,000 Hz, 5,000.0 Hz</td><td>-6.0, -6.0 dBFS both sides</td><td>86.2</td></tr>
+        <tr><td>48 kHz stereo MP3, 2 s</td><td>88,199 (88,200)</td><td>800 Hz, 800.0 Hz</td><td>-6.3, -6.3 dBFS</td><td>80.1</td></tr>
       </tbody>
-      <caption>Measured by snipaudio.com, 2026-09-28, Chromium, WAV export. Expected = the time in the box × 44,100, rounded. Typed rows gave identical results on the desktop and phone profiles. In every clip the samples ran on without a gap and no value changed by more than 1 step of 16-bit rounding.</caption>
+      <caption>Measured by snipaudio.com, 2026-09-29, Chromium 153, WAV export. "Clean" compares each clip with ideal sine tones at the measured level; left / right where the clip is stereo.</caption>
     </table></div>
-    <p>The last row of typed cuts ended on sample 2,645,999, the final sample of the file, so trimming to the very end loses nothing.</p>
-    <p>Dragging a handle was just as exact about the time it showed, but you cannot choose that time finely. With a 60 s file, one pixel of the waveform was 67 ms on our 890-pixel desktop waveform and 181 ms on the 331-pixel phone waveform. Drag to get close, then type the exact value.</p>
+    <p>What the numbers show:</p>
+    <ul>
+      <li><b>No speed change.</b> Four clips kept their length to the sample. The 48 kHz MP3 lost one sample out of 88,200, and a separate 1-second 48 kHz WAV also came out at 44,099 samples. One sample is 0.02 ms.</li>
+      <li><b>No level change.</b> The -6.3 dBFS of the MP3 clip was already in the MP3: decoded on its own by FFmpeg at 48 kHz, it read -6.3 dBFS too.</li>
+      <li><b>Mono clips</b> had bit-identical left and right sides in the stereo result. When we joined only the two mono clips, the result was a mono WAV of 198,450 samples.</li>
+      <li><b>Clean conversion.</b> After resampling, the WAV clips were 82 to 88 dB away from ideal tones, including the 8 kHz clip that had to be stretched to more than five times as many samples.</li>
+    </ul>
   </section>
 
   <section data-own>
-    <h2>MP3 in, MP3 out: where the 25 ms shifts come from</h2>
-    <p>Same cut (12.345 s to 18.345 s) on the click file in four versions. A positive number means the sound in the clip sits later than it should, measured in samples at 44.1 kHz.</p>
+    <h2>Sound above 22.05 kHz: removed, but not always completely</h2>
+    <p>A 44.1 kHz file cannot hold anything above 22.05 kHz. A resampler should filter it out; if it does not, it folds back as a lower tone (an alias). We put a tone above that limit into two clips:</p>
     <div class="tablewrap"><table>
-      <thead><tr><th>Source file</th><th>Export WAV</th><th>Export MP3 128 kbps</th></tr></thead>
+      <thead><tr><th>Clip</th><th>Tone above 22.05 kHz</th><th>Where an alias would land</th><th>Level found there</th></tr></thead>
       <tbody>
-        <tr><td>WAV, 44.1 kHz</td><td>0.01</td><td>1,105</td></tr>
-        <tr><td>WAV, 48 kHz</td><td>0.01</td><td>1,105</td></tr>
-        <tr><td>MP3 with LAME header (FFmpeg)</td><td>0.01</td><td>1,104.98</td></tr>
-        <tr><td>MP3 without LAME header (this site's encoder)</td><td>1,104.98</td><td>2,210</td></tr>
-        <tr><td>Same, both times typed 0.025 s later</td><td>2.98</td><td>not tested</td></tr>
+        <tr><td>96 kHz mono</td><td>30,000 Hz at -12.0 dBFS</td><td>14,100 Hz</td><td>-97.4 dBFS</td></tr>
+        <tr><td>48 kHz stereo</td><td>23,000 Hz at -6.0 dBFS</td><td>21,100 Hz</td><td>-48.9 dBFS</td></tr>
       </tbody>
-      <caption>Measured by snipaudio.com, 2026-09-28. Average of the 3 clicks inside each clip, in samples. 1,105 samples = 25.1 ms and 2,210 samples = 50.1 ms at 44.1 kHz. The MP3 with a LAME header gave the same numbers on the phone profile.</caption>
+      <caption>Measured by snipaudio.com, 2026-09-29, Chromium 153, WAV export.</caption>
     </table></div>
-    <p><b>The 48 kHz file</b> was converted to 44.1 kHz when the page opened it, and the cut still landed within 0.01 samples of the typed time. A different sample rate did not cost any precision.</p>
-    <p><b>MP3 export</b> added 1,105 samples of silence at the start every time, whatever the source. The MP3 clip was also 1,512 samples longer than the 264,600 we asked for. The same 1,105-sample delay showed up in our <a href="../does-cutting-mp3-lose-quality/">test of MP3 quality loss</a>, where it built up with every re-cut.</p>
-    <p><b>The MP3 without a LAME header</b> was opened with the encoder's 1,105 samples still at the front: Chromium decoded it as 2,647,296 samples instead of 2,646,000. Every position in the file was pushed 25.1 ms back, so a cut typed at 12.345 s started at 12.320 s of music. The MP3 with a header was opened at exactly 2,646,000 samples and cut correctly. Exporting the headerless file as MP3 stacked both shifts to 2,210 samples.</p>
-    <p>Typing both times 0.025 s later fixed the headerless MP3 to within 2.98 samples (under 0.1 ms). It works because the shift is a fixed 1,105 samples, the same in every clip we measured.</p>
+    <p>The 30 kHz tone was removed almost completely. The 23 kHz tone, just above the limit, came through as a 21.1 kHz tone 42.9 dB below the original. We do not know how common strong content between 22.05 and 24 kHz is in real 48 kHz files, so we only report what the test tone did.</p>
+  </section>
+
+  <section data-own>
+    <h2>5.1 surround files are folded to stereo</h2>
+    <p>The output is mono or stereo only. Our 48 kHz 5.1 WAV (stored in the order left, right, centre, LFE, left surround, right surround, each speaker a different tone at -10.5 dBFS) came out like this:</p>
+    <ul>
+      <li><b>Left</b> = left at -18.1 dBFS, plus centre and left surround at -21.1 dBFS each.</li>
+      <li><b>Right</b> = right at -18.1 dBFS, plus centre and right surround at -21.1 dBFS each.</li>
+      <li><b>LFE:</b> not in the result (below -105 dBFS on both sides).</li>
+    </ul>
+    <p>That is the usual fold-down: centre and surrounds 3 dB below the front speakers, the LFE left out, and the whole mix turned down so the sum cannot clip. We measured it on 2026-09-29, after a fix. The version live earlier that day put the centre speaker only on the left and the LFE only on the right; the same fixed fold-down now runs in the cutter and the format converters on this site. We tested with a 5.1 WAV; the order inside other surround formats may differ. If the bass from the LFE matters, join a stereo version made from the original instead.</p>
+  </section>
+
+  <section data-own>
+    <h2>Exporting the combined file as MP3</h2>
+    <p>The same six-clip join exported as MP3 at 128 kbps was a 44.1 kHz stereo file of 192,679 bytes. Decoded with FFmpeg 4.4.2, it started 1,105 samples (25.1 ms) later than the WAV export. That short silence at the start is added by the MP3 encoder; we measured it in <a href="../can-you-trim-mp3-to-the-millisecond/">Can you trim an MP3 to the exact millisecond?</a>. MP3 export also re-compresses the audio; see <a href="../does-cutting-mp3-lose-quality/">Does cutting an MP3 lose quality?</a> for the loss per bitrate.</p>
   </section>
 
   <section>
-    <h2>How to trim an MP3 to the exact point</h2>
+    <h2>How to combine files with different sample rates</h2>
     <ol>
-      <li><b>Start from the original file</b>, not from a clip you already cut and saved as MP3. Clips saved as MP3 by this cutter are the headerless kind.</li>
-      <li><b>Find the spot by ear</b> with <b>Play region</b>, drag the handles close, then <b>type the final times</b> in the Start and End boxes. Three decimals is the finest step.</li>
-      <li><b>Export WAV</b> when the exact start matters, for example for a clip that has to line up with something else. Nothing is added before or after the samples you chose.</li>
-      <li><b>If you need an MP3 file</b>, expect 25.1 ms of silence at its start. That is fine for a ringtone or a clip to share. If you must cut from a headerless MP3, type both times 0.025 s later.</li>
+      <li>Open the <a href="../../audio-joiner/">audio joiner</a> and add all your files. Each row shows the clip length and whether it is mono or stereo.</li>
+      <li>Put them in order. You do not need to convert any file to one sample rate first.</li>
+      <li>A 5.1 surround file is folded to stereo without its LFE (bass) speaker; if you have a stereo version made from the original, you can use that instead.</li>
+      <li>If the clips are at different volumes, fix that in the source files; the joiner keeps each clip's level as it is.</li>
+      <li>Pick <b>WAV</b> to keep the joined clips exactly as converted, or <b>MP3 at 256 or 320 kbps</b> for a smaller file, then press Merge and download.</li>
     </ol>
   </section>
 
-  <section data-own>
+  <section>
     <h2>Questions</h2>
-    <h3>How do I know if my MP3 has a LAME header?</h3>
-    <p>Run <code>ffprobe yourfile.mp3</code> and look at <code>start:</code> in the Duration line. In our test the file with a header showed <code>start: 0.025057</code> and the one without showed <code>start: 0.000000</code>.</p>
-    <h3>Is trimming less precise on a phone?</h3>
-    <p>Not when you type the times. The phone-size profile kept exactly the same samples as the desktop in every typed cut. Dragging is coarser because the waveform is narrower: 181 ms per pixel against 67 ms on desktop for a 60 s file.</p>
-    <h3>Does a 48 kHz file lose precision?</h3>
-    <p>No. The cutter converts it to 44.1 kHz and cuts on that grid. In our test the cut was 0.01 samples from the typed time, the same as for a 44.1 kHz file.</p>
+    <h3>Can I choose 48 kHz for the combined file?</h3>
+    <p>No. The joiner always writes 44.1 kHz. If you need 48 kHz, convert the joined WAV afterwards in your editing program.</p>
+    <h3>Will a phone recording sound better after joining?</h3>
+    <p>No. Our 8 kHz clip became 44.1 kHz, but resampling cannot add sound that was never recorded. A file recorded at 8 kHz holds nothing above 4 kHz, and it still holds nothing above 4 kHz after the join.</p>
+    <h3>Does mixing sample rates slow the joiner down?</h3>
+    <p>We did not time it separately. All files are decoded and resampled when you add them, before you press Merge and download.</p>
   </section>
 
   <!--grel--><div class="related"><h2>Related guides</h2><ul class="rgrid">
-<li><a href="../../guides/does-cutting-mp3-lose-quality/"><b>Does cutting an MP3 lose quality?</b> <small>Yes, when the cutter re-encodes. Measured loss per bitrate over 10 re-cuts, and why WAV or 320 kbps export avoids most of it.</small></a></li>
-<li><a href="../../guides/combine-audio-files-different-sample-rates/"><b>What happens when you combine audio files with different sample rates?</b> <small>8 to 96 kHz, mono and stereo clips joined into one 44.1 kHz file kept their speed, pitch and level. Where the leftovers are, and how 5.1 is folded.</small></a></li>
 <li><a href="../../guides/does-online-mp3-cutter-upload-your-file/"><b>Does an online MP3 cutter upload your file?</b> <small>How to check in two minutes whether an online cutter sends your file anywhere, and what our own network capture showed: 0 bytes sent.</small></a></li>
+<li><a href="../../guides/can-you-trim-mp3-to-the-millisecond/"><b>Can you trim an MP3 to the exact millisecond?</b> <small>Typed cut times landed on the exact sample in every WAV export we tested. What moves an MP3 trim by 25.1 ms, and how to avoid it.</small></a></li>
+<li><a href="../../guides/does-cutting-mp3-lose-quality/"><b>Does cutting an MP3 lose quality?</b> <small>Yes, when the cutter re-encodes. Measured loss per bitrate over 10 re-cuts, and why WAV or 320 kbps export avoids most of it.</small></a></li>
 </ul></div><!--/grel-->
 
   <!--more--><div class="more"><h2>Continue with the next audio task</h2><nav class="tools" aria-label="Audio tools"><a class="tool" data-tag="Task" href="../../"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></svg><span><b>Audio Cutter</b><small>Cut part of one file</small></span></a><a class="tool" data-tag="Task" href="../../audio-joiner/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 6h6l4 6h7"/><path d="M3 18h6l4-6"/><path d="M17 9l3 3-3 3"/></svg><span><b>Audio Joiner</b><small>Merge several files into one</small></span></a><a class="tool" data-tag="Analyze" href="../../bpm-finder/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg><span><b>BPM Finder</b><small>Find the tempo and key of a song</small></span></a><a class="tool" data-tag="Convert" href="../../m4a-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 8h15"/><path d="M14 4l4 4-4 4"/><path d="M21 16H6"/><path d="M10 12l-4 4 4 4"/></svg><span><b>M4A to MP3</b><small>Convert M4A files to MP3</small></span></a><a class="tool" data-tag="Convert" href="../../mp3-to-wav/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h2M6 8v8M10 5v14M14 9v6M18 7v10M22 12h-2"/></svg><span><b>MP3 to WAV</b><small>Convert MP3 files to WAV</small></span></a><a class="tool" data-tag="Convert" href="../../wav-to-mp3/"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M2 12h1M5 8v8M9 5v14M13 9v6"/><path d="M16 12h6"/><path d="M19 9l3 3-3 3"/></svg><span><b>WAV to MP3</b><small>Convert WAV files to MP3</small></span></a></nav></div><!--/more-->

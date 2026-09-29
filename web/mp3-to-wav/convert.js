@@ -135,11 +135,24 @@ function refresh() {
   for (const it of items) if (q(it, '[data-act=go]')) q(it, '[data-act=go]').disabled = busy || it.state === 'reading';
 }
 
+// Wider than stereo -> stereo. Web Audio channel order is L R C LFE SL SR (quad: L R SL SR): centre goes to both sides at -3 dB,
+// LFE is dropped, the other channels alternate left/right at -3 dB, and each side is divided by its total weight so it can't clip.
+function toStereo(src) {
+  const n = src.length, len = src[0].length, out = [new Float32Array(len), new Float32Array(len)], sum = [0, 0];
+  const add = (d, s, w) => { const t = out[s]; sum[s] += w; for (let i = 0; i < len; i++) t[i] += d[i] * w; };
+  let k = 0;
+  src.forEach((d, c) => {
+    if (c < 2) add(d, c, 1);
+    else if (c === 2 && n !== 4) { add(d, 0, Math.SQRT1_2); add(d, 1, Math.SQRT1_2); }
+    else if (!(c === 3 && n >= 6)) add(d, k++ % 2, Math.SQRT1_2);
+  });
+  for (let s = 0; s < 2; s++) for (let i = 0; i < len; i++) out[s][i] /= sum[s];
+  return out;
+}
+
 function channelsOf(buf) {
   if (buf.numberOfChannels <= 2) return Array.from({ length: buf.numberOfChannels }, (_, c) => buf.getChannelData(c));
-  const L = new Float32Array(buf.length), R = new Float32Array(buf.length), k = Math.ceil(buf.numberOfChannels / 2);
-  for (let c = 0; c < buf.numberOfChannels; c++) { const d = buf.getChannelData(c), t = c % 2 ? R : L; for (let i = 0; i < d.length; i++) t[i] += d[i] / k; }
-  return [L, R];
+  return toStereo(Array.from({ length: buf.numberOfChannels }, (_, c) => buf.getChannelData(c)));
 }
 
 async function convert(it) {

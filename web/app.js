@@ -13,6 +13,21 @@ const dur = () => audio.len / RATE;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const msRound = s => Math.round(s * 1000) / 1000;
 
+// Wider than stereo -> stereo. Web Audio channel order is L R C LFE SL SR (quad: L R SL SR): centre goes to both sides at -3 dB,
+// LFE is dropped, the other channels alternate left/right at -3 dB, and each side is divided by its total weight so it can't clip.
+function toStereo(src) {
+  const n = src.length, len = src[0].length, out = [new Float32Array(len), new Float32Array(len)], sum = [0, 0];
+  const add = (d, s, w) => { const t = out[s]; sum[s] += w; for (let i = 0; i < len; i++) t[i] += d[i] * w; };
+  let k = 0;
+  src.forEach((d, c) => {
+    if (c < 2) add(d, c, 1);
+    else if (c === 2 && n !== 4) { add(d, 0, Math.SQRT1_2); add(d, 1, Math.SQRT1_2); }
+    else if (!(c === 3 && n >= 6)) add(d, k++ % 2, Math.SQRT1_2);
+  });
+  for (let s = 0; s < 2; s++) for (let i = 0; i < len; i++) out[s][i] /= sum[s];
+  return out;
+}
+
 async function load(file) {
   if (!file) return;
   stop();
@@ -26,13 +41,7 @@ async function load(file) {
     let ch = [];
     if (dec.numberOfChannels === 1) ch = [dec.getChannelData(0)];
     else if (dec.numberOfChannels === 2) ch = [dec.getChannelData(0), dec.getChannelData(1)];
-    else {
-      ch = [new Float32Array(dec.length), new Float32Array(dec.length)];
-      for (let c = 0; c < dec.numberOfChannels; c++) {
-        const d = dec.getChannelData(c), t = ch[c % 2];
-        for (let i = 0; i < d.length; i++) t[i] += d[i] / Math.ceil(dec.numberOfChannels / 2);
-      }
-    }
+    else ch = toStereo(Array.from({ length: dec.numberOfChannels }, (_, c) => dec.getChannelData(c)));
     audio = { ch, len: dec.length, name: file.name.replace(/\.[^.]+$/, '') || 'audio' };
     peaks = null;
     const d = dur();
